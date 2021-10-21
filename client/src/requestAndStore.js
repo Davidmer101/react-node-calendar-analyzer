@@ -18,7 +18,7 @@ let gapi = window.gapi;
           events('day', calendar.summary, calendar.id, dayBehind.toISOString(), dayAhead.toISOString());
         }
     } catch (error) {
-      alert(error.message);
+      alert('error in requestAndStore-> listOfCalendars ' + error.message);
     }
   }
 
@@ -88,7 +88,7 @@ let gapi = window.gapi;
   
   } catch (error) {
     console.log(error)
-    alert('in events:' + error.message)
+    alert('error in requestAndStore-> events: ' + error.message)
   }
  }
 
@@ -111,6 +111,6 @@ let gapi = window.gapi;
  })
 //  alert(JSON.stringify(result))
   } catch (error) {
-    alert(error.message)
+    alert('error in requestAndStore-> sendPost: ' + error.message)
   }
  }

@@ -7,6 +7,7 @@
     "start": "node server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "type": "module",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Davidmer101/react-node-calendar-analyzer.git"
@@ -19,6 +20,12 @@
   },
   "homepage": "https://github.com/Davidmer101/react-node-calendar-analyzer#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "errorhandler": "^1.5.1",
+    "express": "^4.17.1",
+    "express-session": "^1.17.2",
+    "morgan": "^1.10.0",
+    "sqlite3": "^5.0.2"
   }
 }

@@ -3,11 +3,42 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { BrowserRouter as Router, Switch, Route} from "react-router-dom";
+import Home from "./pages/Home";
+import Blogs from "./pages/Blogs";
+import Contact from "./pages/Contact";
+import Nav from "./pages/Nav";
+import 'bulma/css/bulma.min.css';
 
+function Index () {
+  //don't forget App
+  return (
+    <Router>
+      <Nav/>      
+      <hr />
+      <Switch>
+        <Route exact path="/">
+          <Home />
+        </Route>
+        <Route path="/blogs">
+          <Blogs/>
+        </Route>
+        <Route path="/contact">
+          <Contact/>
+        </Route>
+        <Route path="/app">
+          <App/>
+        </Route>
+      </Switch>
+    </Router>
+
+  
+  )
+}
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Index />
   </React.StrictMode>,
   document.getElementById('root')
 );

@@ -7,9 +7,16 @@ function Nav() {
         
         <nav class="navbar" role="navigation" aria-label="main navigation">
             <div class="navbar-brand">
-                <a class="navbar-item" href="https://bulma.io">
-                <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28"></img>
-                </a>
+                <Link to="/" class="navbar-item" > 
+                {/* <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28"></img> */}
+                    
+                    <span class="icon-text">
+                        <span class="icon">
+                        <i class="fas fa-history"></i>
+                        </span>
+                        <span class="m-0 p-0 has-text-link" id = 'logo'>Lastweek</span>
+                    </span>
+                </Link>
 
                 <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
                 <span aria-hidden="true"></span>
@@ -54,7 +61,7 @@ function Nav() {
                         </div>
                     </div>
                 </div>
-                
+
             </div>  
         </nav>
     )

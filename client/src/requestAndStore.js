@@ -61,25 +61,38 @@ let gapi = window.gapi;
       let eventStartsAt = new Date(event.start.dateTime);
       let eventEndsAt = new Date(event.end.dateTime);
       let eventDuration =  myDate.timeBetween(eventStartsAt, eventEndsAt).hours
-      let dayEndsAt = (new Date(eventEndsAt))
-      dayEndsAt.setHours(11, 59, 59)
-      let dayStartsAt = (new Date(eventStartsAt));
-      dayStartsAt.setHours(0,0,0)
+      
+      
       //if event goes to the next day break it into to events upto 11:59:59 and 12 after that
       if (eventStartsAt.getDate() !== eventEndsAt.getDate()) {
+        let dayEndsAt = (new Date(eventStartsAt))
+        dayEndsAt.setHours(23, 59, 59)
+        let nextDayStartsAt = (new Date(eventEndsAt));
+        nextDayStartsAt.setHours(0,0,0)
+        // alert('event start and end dates respectively: ' + eventStartsAt.getDate() + ' and ' + eventEndsAt.getDate())
+        // alert("eventStartsAt: " + eventStartsAt.toLocaleString() + " AND " + 'eventEndsAt: ' + eventEndsAt.toLocaleString())
+        // alert('dayEndsAt: ' + dayEndsAt.toLocaleString())
+        // alert('nextdayStartsAt: ' + nextDayStartsAt.toLocaleString())
         //seperate into two events 
-        console.log(event.summary + ':' + eventStartsAt.toLocaleString() + ':' + dayEndsAt.toLocaleString() + ':' + calName + ':' + 3 + ':' + 3)
-        console.log(event.summary + ':' + dayStartsAt.toLocaleString() + ':' + eventEndsAt.toLocaleString() + ':' + calName + ':' + 3 + ':' + 3)
+        // console.log(event.summary + ':' + eventStartsAt.toLocaleString() + ':' + dayEndsAt.toLocaleString() + ':' + calName + ':' + 3 + ':' + 3)
+        // console.log(event.summary + ':' + dayStartsAt.toLocaleString() + ':' + eventEndsAt.toLocaleString() + ':' + calName + ':' + 3 + ':' + 3)
         let weekNum1 = myDate.weekNumber(eventStartsAt)
         let weekNum2 = myDate.weekNumber(eventEndsAt)
         let monthNum1 = eventStartsAt.getMonth()
         let monthNum2 = eventEndsAt.getMonth()
+        let eventDuration1 = myDate.timeBetween(eventStartsAt, dayEndsAt).hours
+        let eventDuration2 = myDate.timeBetween(nextDayStartsAt, eventEndsAt).hours
+        sendPost(eventStartsAt.toDateString(), event.summary, eventStartsAt, dayEndsAt, calName, event.description, eventDuration1, weekNum1, monthNum1)
+        sendPost(eventEndsAt.toDateString(), event.summary, nextDayStartsAt, eventEndsAt, calName, event.description, eventDuration2, weekNum2, monthNum2)
+        console.log(eventStartsAt.toDateString(), event.summary, eventStartsAt.toDateString(), dayEndsAt.toDateString(), calName, event.description, eventDuration1, weekNum1, monthNum1)
+        console.log('second Shift')
+        console.log(eventEndsAt.toDateString(), event.summary, nextDayStartsAt.toDateString(), eventEndsAt.toDateString(), calName, event.description, eventDuration2, weekNum2, monthNum2)
 
       } else {
         let weekNum = myDate.weekNumber(eventStartsAt)
         let monthNum = eventStartsAt.getMonth()
-        console.log(event.summary + ':' + eventStartsAt.toLocaleString() + ':' + eventEndsAt.toLocaleString() + ':' + calName + ':' + 3 + ':' + 3)
-        sendPost('day', event.summary, eventStartsAt, eventEndsAt, calName, event.description, eventDuration, weekNum, monthNum)
+        // console.log(event.summary + ':' + eventStartsAt.toLocaleString() + ':' + eventEndsAt.toLocaleString() + ':' + calName + ':' + 3 + ':' + 3)
+        sendPost(eventStartsAt.toDateString(), event.summary, eventStartsAt, eventEndsAt, calName, event.description, eventDuration, weekNum, monthNum)
 
       }
       
@@ -96,7 +109,7 @@ let gapi = window.gapi;
   try {
    let result = await axios ({
      method: 'post',
-     url: `${starterURL}api/days/`,
+     url: `${starterURL}api/daily/`,
      data: {
         "id": id,
         "eventName": eventName,

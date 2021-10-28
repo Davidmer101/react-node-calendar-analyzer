@@ -4,8 +4,9 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter as Router, Switch, Route} from "react-router-dom";
-import Home from "./pages/Home";
+import Home from "./pages/Contact";
 import Blogs from "./pages/Blogs";
+import Daily from "./pages/Daily";
 import Contact from "./pages/Contact";
 import Nav from "./pages/Nav";
 import 'bulma/css/bulma.min.css';
@@ -28,6 +29,9 @@ function Index () {
         </Route>
         <Route path="/app">
           <App/>
+        </Route>
+        <Route path="/daily">
+          <Daily date={`/api/daily/${(new Date()).toDateString()}`}/>
         </Route>
       </Switch>
     </Router>

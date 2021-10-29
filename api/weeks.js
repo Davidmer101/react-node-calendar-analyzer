@@ -20,6 +20,7 @@ weeksRouter.param('weekId', (req, res, next, weekId) => { // check if Id exits (
 
 weeksRouter.get('/', (req, res, next) => {
     const sql = 'SELECT * FROM Weeks';
+    value = {demo: 'demo'}
     db.all(sql, values, (error, week) => {
         if(error) {
             next(error);
@@ -48,6 +49,25 @@ weeksRouter.get('/:weekId', (req, res, next) => {
     
     console.log(req.session);
     res.status(200).json({week: req.week})
+
+    let type = calName
+    let weekNum = 42
+    const sql = `SELECT ${type} , sum(duration) as totalHours` + 
+    "FROM Records" + 
+    `WHERE weekNum = ${weekNum}` + 
+    "GROUP BY calName" + 
+    "ORDER BY totalHours DESC"
+
+    db.all(sql, (error, data) => {
+        if(error) {
+            next(error)
+        } else if (data) {
+            res.status(200).json({records: data})
+            next();
+        } else {
+            res.sendStatus(404);
+        }
+    })
 })
 
 weeksRouter.post('/', (req, res, next) => {

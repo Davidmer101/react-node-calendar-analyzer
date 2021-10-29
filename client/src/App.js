@@ -35,7 +35,6 @@ class App extends React.Component {
 
       this.gapi.auth2.getAuthInstance().signIn()
       .then(() => { 
-        alert('succssfully signed in')
         this.updateSignInStatus(true)
       })
       .catch(err => alert('trying to sign in but: ' + err.message))
@@ -44,7 +43,7 @@ class App extends React.Component {
 
   updateSignInStatus(signedIn) {
     if (signedIn) {
-      alert('signIn Confirmed')
+      // alert('signIn Confirmed')
       myRequestAndStore.listOfCalendars()
     }
   }

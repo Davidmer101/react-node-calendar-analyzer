@@ -19,12 +19,12 @@ daysRouter.param('weekId', (req, res, next, weekId) => { // check if Id exits (s
 })
 
 daysRouter.get('/', (req, res, next) => {
-    const sql = 'SELECT * FROM Weeks';
-    db.all(sql, values, (error, week) => {
+    const sql = 'SELECT * FROM Records WHERE Records.id = "Mon Sep 27 2021"';
+    db.all(sql, (error, data) => {
         if(error) {
             next(error);
-        } else if (week) {
-            res.status(200).json({week: week})
+        } else if (data) {
+            res.status(200).json({records: data})
             next();
         } else {
             res.sendStatus(404);
@@ -44,10 +44,18 @@ daysRouter.get('/', (req, res, next) => {
     //     });
 }) 
 
-daysRouter.get('/:weekId', (req, res, next) => {
+daysRouter.get('/:dayId', (req, res, next) => {
+    const sql = `SELECT calName, SUM(duration) as TotalHours FROM Records WHERE Records.id = "${req.params.dayId}" Group By calName Order By TotalHours DESC`
+    db.all(sql, (error, data) =>{
+        if (error) {
+            res.status(401).json({error: error.message, dayId: req.params.dayId});
+        } else {
+            res.status(200).json({records: data});
+        }
+    })
     
     console.log(req.session);
-    res.status(200).json({week: req.week})
+    // res.status(200).json({record: "ALL SUCCESSFUL", dayId: req.params.dayId});
 })
 
 daysRouter.post('/', (req, res, next) => {

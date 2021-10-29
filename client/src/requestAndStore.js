@@ -41,10 +41,11 @@ let gapi = window.gapi;
     let response = await gapi.client.calendar.events.list({
       'calendarId': calId,
       'singleEvents': true,
-      // 'orderBy': 'startTime',
+      'orderBy': 'startTime',
       'timeZone': myDate.timeZone(new Date().toString()),
       'timeMin': minDate,
-      'timeMax': maxDate
+      'timeMax': maxDate,
+      'maxResults': 2500,
       
   });
 
@@ -53,7 +54,7 @@ let gapi = window.gapi;
   let requestUpTo = new Date(maxDate);
   console.log('sleep requesting from: ' + requestFrom + ' upto ' + requestUpTo);
   events.forEach((event) => {
-    //  console.log(event.summary + ':' + new Date(event.start.dateTime).toLocaleString() + ':' + new Date(event.end.dateTime).toLocaleString() + ':' + calName + ':' + 3 + ':' + 3)
+     console.log(event.summary + ':' + new Date(event.start.dateTime).toLocaleString() + ':' + new Date(event.end.dateTime).toLocaleString() + ':' + calName + ':' + 3 + ':' + 3)
      if (event.summary !== undefined && !event.start.date) { // ignores undefined and all day events
       if (!(eventList.includes(event.summary))) {
         eventList.push(event.summary)
@@ -84,9 +85,9 @@ let gapi = window.gapi;
         let eventDuration2 = myDate.timeBetween(nextDayStartsAt, eventEndsAt).hours
         sendPost(eventStartsAt.toDateString(), event.summary, eventStartsAt, dayEndsAt, calName, event.description, eventDuration1, weekNum1, monthNum1)
         sendPost(eventEndsAt.toDateString(), event.summary, nextDayStartsAt, eventEndsAt, calName, event.description, eventDuration2, weekNum2, monthNum2)
-        console.log(eventStartsAt.toDateString(), event.summary, eventStartsAt.toDateString(), dayEndsAt.toDateString(), calName, event.description, eventDuration1, weekNum1, monthNum1)
-        console.log('second Shift')
-        console.log(eventEndsAt.toDateString(), event.summary, nextDayStartsAt.toDateString(), eventEndsAt.toDateString(), calName, event.description, eventDuration2, weekNum2, monthNum2)
+        // console.log(eventStartsAt.toDateString(), event.summary, eventStartsAt.toDateString(), dayEndsAt.toDateString(), calName, event.description, eventDuration1, weekNum1, monthNum1)
+        // console.log('second Shift')
+        // console.log(eventEndsAt.toDateString(), event.summary, nextDayStartsAt.toDateString(), eventEndsAt.toDateString(), calName, event.description, eventDuration2, weekNum2, monthNum2)
 
       } else {
         let weekNum = myDate.weekNumber(eventStartsAt)

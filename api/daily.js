@@ -45,7 +45,8 @@ daysRouter.get('/', (req, res, next) => {
 }) 
 
 daysRouter.get('/:dayId', (req, res, next) => {
-    const sql = `SELECT calName, SUM(duration) as TotalHours FROM Records WHERE Records.id = "${req.params.dayId}" Group By calName Order By TotalHours DESC`
+    let type = 'calName'
+    const sql = `SELECT ${type}, SUM(duration) as TotalHours FROM Records WHERE Records.id = "${req.params.dayId}" Group By ${type} Order By ${type}`
     db.all(sql, (error, data) =>{
         if (error) {
             res.status(401).json({error: error.message, dayId: req.params.dayId});
@@ -54,7 +55,6 @@ daysRouter.get('/:dayId', (req, res, next) => {
         }
     })
     
-    console.log(req.session);
     // res.status(200).json({record: "ALL SUCCESSFUL", dayId: req.params.dayId});
 })
 

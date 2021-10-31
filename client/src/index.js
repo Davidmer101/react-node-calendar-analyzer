@@ -7,10 +7,11 @@ import { BrowserRouter as Router, Switch, Route} from "react-router-dom";
 import Home from "./pages/Contact";
 import Blogs from "./pages/Blogs";
 import Daily from "./pages/Daily";
+import Weekly from "./pages/Weekly";
 import Contact from "./pages/Contact";
 import Nav from "./pages/Nav";
 import 'bulma/css/bulma.min.css';
-import * as myDate from './date.js';
+
 
 function Index () {
   //don't forget App
@@ -32,14 +33,10 @@ function Index () {
           <App/>
         </Route>
         <Route path="/daily">
-          <Daily date={`/api/daily/${myDate.updateDate((new Date()), 1).toDateString()}`}/>
-          <Daily date={`/api/daily/${(new Date()).toDateString()}`}/>
-          <Daily date={`/api/daily/${myDate.updateDate((new Date()), -1).toDateString()}`}/>
-          <Daily date={`/api/daily/${myDate.updateDate((new Date()), -2).toDateString()}`}/>
-          <Daily date={`/api/daily/${myDate.updateDate((new Date()), -3).toDateString()}`}/>
-          <Daily date={`/api/daily/${myDate.updateDate((new Date()), -4).toDateString()}`}/>
-          <Daily date={`/api/daily/${myDate.updateDate((new Date()), -5).toDateString()}`}/>
-          <Daily date={`/api/daily/${myDate.updateDate((new Date()), -6).toDateString()}`}/>
+          <Daily/>
+        </Route>
+        <Route path="/weekly">
+          <Weekly data = {43}/>
         </Route>
       </Switch>
     </Router>

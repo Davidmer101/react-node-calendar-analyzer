@@ -82,3 +82,4 @@
   function secondWeekStarts(date) {
     return 8 - date.getDay()
   }
+

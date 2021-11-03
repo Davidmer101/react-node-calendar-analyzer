@@ -54,7 +54,7 @@ weeksRouter.get('/:weekId', (req, res, next) => {
   
     let type = 'calName'
     let weekNum = req.params.weekId
-    const sql =`SELECT ${type} , sum(duration) as totalHours 
+    const sql =`SELECT ${type} , sum(duration) as totalHours, id 
                 FROM Records
                 WHERE weekNum = ${weekNum} 
                 GROUP BY calName

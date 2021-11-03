@@ -83,3 +83,43 @@
     return 8 - date.getDay()
   }
 
+  /**
+ * @param {Date} date
+ * @param {number} days
+ * @return {number} day updated incase it's below 0 or above number of dates in that month
+ */
+function validityCheck (date, day) {
+    if(day < 0) {
+        return day + daysInAMonth(date.getMonth() - 1)
+    } else if (day > 23) {
+        if(day > daysInAMonth(date.getMonth())) {
+            return day - daysInAMonth(date.getMonth());
+        } else {
+            return day;
+        }
+    } else {
+        return day;
+        
+    }
+}
+
+  /**
+ * when called on a date, it gives the date ex Date with date 15
+ * @weekStart ex Sun 14
+ * @weekEnd ex Sat 20
+ */
+export function weekSpan (date) {
+    if(date.getDay() == 0) {
+        let weekStart = `Sun ${date.getDate()}`
+        let weekEnd = `Sat ${date.getDate() + 6}`
+        return {weekStart, weekEnd}
+    
+    }
+    // if(date.getDay() == 1) {date.weekStart = `Sun ${validityCheck(date,date.getDate()-1)}`, date.weekEnd = `Sat ${validityCheck(date,date.getDate() + 5)}`}
+    // if(date.getDay() == 2) {date.weekStart = `Sun ${validityCheck(date,date.getDate()-2)}`, date.weekEnd = `Sat ${validityCheck(date,date.getDate() + 4)} ` }
+    // if(date.getDay() == 3) {date.weekStart = `Sun ${validityCheck(date,date.getDate()-3)}`, date.weekEnd = `Sat ${validityCheck(date,date.getDate() + 3)}`}
+    // if(date.getDay() == 4) {date.weekStart = `Sun ${validityCheck(date,date.getDate()-4)}`, date.weekEnd = `Sat ${validityCheck(date,date.getDate() + 2)}`}
+    // if(date.getDay() == 5) {date.weekStart = `Sun ${validityCheck(date,date.getDate()-5)}`, date.weekEnd = `Sat ${validityCheck(date,date.getDate() + 1)}`}
+    // if(date.getDay() == 6) {date.weekStart = `Sun ${validityCheck(date,date.getDate()-6)}`, date.weekEnd = `Sat ${date.getDate()}`}
+}
+

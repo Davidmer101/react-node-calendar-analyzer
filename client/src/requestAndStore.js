@@ -5,6 +5,7 @@ let starterURL = 'http://localhost:5000/'
 let calendarList = [];
 let eventList = [];
 let gapi = window.gapi; 
+let numberOfEvents = 0
 
    export async function listOfCalendars() {
     try {
@@ -14,7 +15,7 @@ let gapi = window.gapi;
           let calendar = calendars[i];
           calendarList.push(calendar.summary)
           let dayAhead = myDate.updateDate(new Date(), 7);
-          let dayBehind = myDate.updateDate(new Date(), -30);
+          let dayBehind = myDate.updateDate(new Date(), -80);
           events('day', calendar.summary, calendar.id, dayBehind.toISOString(), dayAhead.toISOString());
         }
     } catch (error) {
@@ -36,6 +37,7 @@ let gapi = window.gapi;
  * Eventually, it will populate @object weeklyData and call @function sendToServer() 
  */
  async function events(timeId, calName, calId, minDate, maxDate) {
+
   //  console.log(`called with ${timeId}, ${calName}, ${new Date(minDate).toLocaleString()}, ${new Date(maxDate).toLocaleString()}`)
   try {
     let response = await gapi.client.calendar.events.list({
@@ -52,9 +54,11 @@ let gapi = window.gapi;
   const events = response.result.items;
   let requestFrom = new Date(minDate);
   let requestUpTo = new Date(maxDate);
-  console.log('sleep requesting from: ' + requestFrom + ' upto ' + requestUpTo);
+  // console.log('sleep requesting from: ' + requestFrom + ' upto ' + requestUpTo);
   events.forEach((event) => {
-     console.log(event.summary + ':' + new Date(event.start.dateTime).toLocaleString() + ':' + new Date(event.end.dateTime).toLocaleString() + ':' + calName + ':' + 3 + ':' + 3)
+      numberOfEvents++;
+      console.log('num of events is: '+ numberOfEvents)
+    //  console.log(event.summary + ':' + new Date(event.start.dateTime).toLocaleString() + ':' + new Date(event.end.dateTime).toLocaleString() + ':' + calName + ':' + 3 + ':' + 3)
      if (event.summary !== undefined && !event.start.date) { // ignores undefined and all day events
       if (!(eventList.includes(event.summary))) {
         eventList.push(event.summary)

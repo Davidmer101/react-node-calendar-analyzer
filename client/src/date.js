@@ -109,7 +109,7 @@ function validityCheck (date, day) {
 
 /** after this is getting weekly range */
 function adjustDate(date) {
-    let day = date.getDay()
+    let day = new Date(date).getDay();
     let shiftLeft = 0
     let shiftRight = 0
     if (day == 0){
@@ -138,7 +138,7 @@ function adjustDate(date) {
     return{shiftLeft: shiftLeft, shiftRight: shiftRight}
 }
 
-function oneWeek(date) {
+ function oneWeek(date) {
     let shifts = adjustDate(date)
     console.log(shifts.shiftLeft + ' ' + shifts.shiftRight)
     let weekStartsOn = new Date(date)
@@ -153,4 +153,4 @@ let date = new Date(input)
 let givenWeek = oneWeek(date)
 console.log(givenWeek.weekStartsOn.toDateString() + ' ' + givenWeek.weekEndsOn.toDateString())
 
-exports = {updateDate, timeZone, timeBetween, weekNumber, oneWeek}
+export {updateDate, timeZone, timeBetween, weekNumber, oneWeek}

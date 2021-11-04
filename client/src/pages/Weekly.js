@@ -14,7 +14,7 @@ import { Calendar } from "react-modern-calendar-datepicker";
       let requestData =  useFetch(`/api/weekly/${weekNum}`)
       let data= null
       let totalRecorded = 0
-      let dateRange = 'Sun Oct 31 - Sat Nov 5'
+      let dateRange =  {weekStartsOn: new Date('Sun Oct 31 2021'), weekEndsOn: new Date('Sat Nov 5 2021')}
       if(requestData) {
         data = requestData.records
         measureProductivity(data)
@@ -22,21 +22,30 @@ import { Calendar } from "react-modern-calendar-datepicker";
         totalRecorded = productivity.counter.productive + productivity.counter.neutral + productivity.counter.destructive + productivity.counter.others
       }
 
-      let adjustWeek = (arrow) => {
-        if (arrow == 'right-arrow') {
-          setWeekNum(weekNum + 1)
-        } else if (arrow == 'left-arrow') {
-          setWeekNum(weekNum - 1)
+      let adjustWeek = (e) => {
+        if(e.target && e.target.id) {
+          if (e.target.id == 'right-arrow') {
+            setWeekNum(weekNum + 1)
+          } else if (e.target.id == 'left-arrow') {
+            setWeekNum(weekNum - 1)
+         }
         } else {
-          alert('pressed is: ' + arrow)
+          //make date
+          let date =  new Date(`${e.from.year}, ${e.from.month}, ${e.from.day}`)
+          // find it's week num
+          let weekNum = myDate.weekNumber(date)
+          // update weekNum
+          setWeekNum(weekNum)
+          // alert('pressed is: ' + (JSON.stringify(e)))
+          // alert(date.toLocaleDateString())
         }
       }
 
       return(
         <div class = 'columns'>
           <CalendarView dataC={data}/>
-          <Summaries onClick = {e => adjustWeek(e.target.id)} dateRange = {dateRange} totalRecorded = {totalRecorded}/>
-          <Productivity/>
+          <Summaries onClick = {e => adjustWeek(e)} dateRange = {dateRange} />
+          <Productivity totalRecorded = {totalRecorded}/>
         </div>
       )
   }
@@ -210,10 +219,12 @@ let measureProductivity = (records) => {
                 <th
                   {...column.getHeaderProps()}
                   style={{
-                    borderBottom: 'solid 3px red',
+                    border: 'solid 1px blue',
+                    borderBottom: 'solid 2px red',
                     background: 'aliceblue',
                     color: 'black',
                     fontWeight: 'bold',
+                    
                   }}
                 >
                   {column.render('Header')}
@@ -250,22 +261,43 @@ let measureProductivity = (records) => {
   }
   
   let Summaries = (props) => {
+    let date = new Date(props.dateRange.weekEndsOn)
+    let weekNumber = myDate.weekNumber(date)
+    let currentWeek = myDate.weekNumber(new Date())
+  
+    if(weekNumber == (currentWeek - 1)) {
+      weekNumber = `${weekNumber} (previous week)`
+    } else if(weekNumber == currentWeek ){
+      weekNumber = `${weekNumber} (current week)`
+    } else if (weekNumber == (currentWeek + 1)) {
+      weekNumber = `${weekNumber} (next week)`
+    }
+    let options = {weekday: "short",  month: "short", day: "numeric", year: "numeric"}
     return (
       <div class = 'column is-centered'>
-        <h2> Summaries </h2>
-        <p> Total Hours: {props.totalRecorded}</p>
+        <h2>  Your week {weekNumber} summary </h2>
         <DateRangeView 
           dateRange={props.dateRange} 
           onClick={props.onClick}
           style={{height:10}}/>
         
-        <ShowCalendar/>
-        
+        <ShowCalendar onClick={props.onClick} dateRange={props.dateRange} />
+        <p>Today's date is <strong>{new Date().toLocaleDateString("en-US", options)} </strong> , week {myDate.weekNumber(new Date())}  </p>
       </div>
     )
   }
 
   let DateRangeView = (props) => {
+    
+    let weekStartsOn = props.dateRange.weekStartsOn
+    let weekEndsOn = props.dateRange.weekEndsOn
+    // year not necessary
+    // if same month don't repeat month on weekEndsOn
+
+    let options = {weekday: "short",  month: "short", day: "numeric"}
+    weekStartsOn = weekStartsOn.toLocaleDateString("en-US", options)
+    
+    weekEndsOn = weekEndsOn.toLocaleDateString("en-US", options)
     return(
       <div class="field has-addons is-centered">
           <p class="control">
@@ -276,8 +308,8 @@ let measureProductivity = (records) => {
           </button>
           </p>
           <p class="control">
-          <button class="button">
-            <span id="viewing"> {props.dateRange.weekStartDate} to {props.dateRange.weekEndDate} </span>
+          <button class="button textInside">
+            <span id="viewing"> <strong>{weekStartsOn} </strong> to <strong> {weekEndsOn} </strong></span>
           </button>
           </p>
           <p class="control" >
@@ -290,23 +322,72 @@ let measureProductivity = (records) => {
         </div>
     )
   }
-  let ShowCalendar = () => {
+  let ShowCalendar = (props) => {
      // ✅ a change in default state: { from: ..., to: ... }
-    const [selectedDayRange, setSelectedDayRange] = useState({
-      from: null,
-      to: null
-    });
+     let weekStartsOn = props.dateRange.weekStartsOn
+     let weekEndsOn = props.dateRange.weekEndsOn
+    //  alert('show calendar: starts On: ' + weekStartsOn)
+    //  alert('show calendar: ends on: ' + weekEndsOn)
+     let defaultFrom = {
+      year: weekStartsOn.getFullYear(),
+      month: weekStartsOn.getMonth() + 1,
+      day: weekStartsOn.getDate(),
+    };
+    let defaultTo = {
+      year: weekEndsOn.getFullYear(),
+      month: weekEndsOn.getMonth() + 1,
+      day: weekEndsOn.getDate(),
+    };
+    // alert('show calendar: default From: ' + JSON.stringify(defaultFrom))
+    // alert('show calendar: default to: ' + JSON.stringify(defaultTo))
+    
+    let defaultValue = {
+      from: defaultFrom,
+      to: defaultTo,
+    };
+    let [selectedDayRange, setSelectedDayRange] = useState(
+      defaultValue
+    );
+ 
     return (
       <Calendar
-        value={selectedDayRange}
-        onChange={setSelectedDayRange}
+        value={defaultValue}
+        onChange={props.onClick}
+        colorPrimary="#0fbcf9" // added this
+        colorPrimaryLight="rgba(75, 207, 250, 0.4)" // and this
         shouldHighlightWeekends
-        style={{height: '60%'}}
       />
     );
+    // const defaultFrom = {
+    //   year: 2021,
+    //   month: 10,
+    //   day: 31,
+    // };
+    // const defaultTo = {
+    //   year: 2021,
+    //   month: 11,
+    //   day: 5,
+    // };
+    // const defaultValue = {
+    //   from: defaultFrom,
+    //   to: defaultTo,
+    // };
+    // const [selectedDayRange, setSelectedDayRange] = useState(
+    //   defaultValue
+    // );
+  
+    // return (
+    //   <Calendar
+    //     value={selectedDayRange}
+    //     onChange={setSelectedDayRange}
+    //     colorPrimary="#0fbcf9" // added this
+    //     colorPrimaryLight="rgba(75, 207, 250, 0.4)" // and this
+    //     shouldHighlightWeekends
+    //   />
+    // );
   }
 
-  let Productivity = () => {
+  let Productivity = (props) => {
     let columnsData = [
       {
         Header: 'Productive',
@@ -328,6 +409,8 @@ let measureProductivity = (records) => {
           <p> Productivity</p>
           <ViewButtons type='productivity'/>
           <TableData columnsT={columnsData} dataT={data}/>
+          <p> Total Hours: {props.totalRecorded}</p>
+
       </div>
       
 

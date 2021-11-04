@@ -56,3 +56,7 @@ th.tc, td.tc {
 button > * {
   pointer-events: none;
 }
+
+/* .textInside {
+  width: 400px
+} */

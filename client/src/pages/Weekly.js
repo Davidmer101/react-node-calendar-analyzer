@@ -6,29 +6,14 @@ import { useTable } from 'react-table'
 
   let productivity = {counter: [{productive: 0}, {neutral: 0}, {destructive: 0}], list:{productivityList: ["education", "med", "work", "tasks"], neturalList:["life"], destructiveList:['entertainment']}}
   
-  class Weekly extends React.Component {
-    render() {
+  let Weekly = () => {
       return(
-        <>
-            <div class = 'columns'>
-              <div class = 'column'>
-                <div class = 'column'>
-                  <CalendarView/>
-                </div>
-                
-              </div>
-              <div class = 'column'>
-                <Summaries/>
-              </div>
-              <div class = 'column'> 
-                Productivity View
-              </div>
-            </div>
-            
-        </>
+        <div class = 'columns'>
+          <CalendarView/>
+          <Summaries/>
+          <Productivity/>
+        </div>
       )
-    }
-    
   }
 // {/* <h2 >{requested.date.slice(11)}</h2> */}
 
@@ -118,22 +103,16 @@ let measureProductivity = (cal, spent) => {
     }
   }
 
-  class CalendarView extends React.Component {
-   
-
-
-    render() {
+  let CalendarView = () => {
       return(
-        <>
+        <div class = 'column'>
             <p class="is-centered">Calendar</p>
             <ViewButtons type='calendar'/>
             <TableData />
-      
-            
-        </>
+
+        </div>
        
       )
-    }
     
   }
   
@@ -236,7 +215,7 @@ let measureProductivity = (cal, spent) => {
   
   let Summaries = (timePeriod, totalHours) => {
     return (
-      <>
+      <div class = 'column'>
         <p> Summaries </p>
 
         <div class="field has-addons">
@@ -262,7 +241,19 @@ let measureProductivity = (cal, spent) => {
         </div>
         
         <p> Total Hours: 139</p>
-      </>
+      </div>
+    )
+  }
+
+  let Productivity = () => {
+    return (
+      <div class = 'column'> 
+          <p> Productivity</p>
+          <ViewButtons type='productivity'/>
+          <TableData/>
+      </div>
+      
+
     )
   }
     export default Weekly;

@@ -36,10 +36,7 @@ function Index () {
           <Daily/>
         </Route>
         <Route path="/weekly">
-          <table class="table is-striped is-bordered">
-              <Weekly data = {43}/>
-          </table>
-         
+          <Weekly weekNum = {43}/>
         </Route>
       </Switch>
     </Router>

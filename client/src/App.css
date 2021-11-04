@@ -51,3 +51,8 @@ tr.tc {
 th.tc, td.tc {
   display: block;
 }
+
+/* element under button fire the button press event */
+button > * {
+  pointer-events: none;
+}

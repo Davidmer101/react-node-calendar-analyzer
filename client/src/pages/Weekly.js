@@ -1,30 +1,61 @@
 import useFetch from "../useFetch";
 import '../App.css'
-import React from "react"
+import React, {useState} from "react"
 import * as myDate from '../date.js';
 import { useTable } from 'react-table'
+import "react-modern-calendar-datepicker/lib/DatePicker.css";
+import DatePicker from "react-modern-calendar-datepicker";
+import { Calendar } from "react-modern-calendar-datepicker";
 
-  let productivity = {counter: [{productive: 0}, {neutral: 0}, {destructive: 0}], list:{productivityList: ["education", "med", "work", "tasks"], neturalList:["life"], destructiveList:['entertainment']}}
+  let productivity = {counter: {productive: 0, neutral: 0, destructive: 0, others:0}, list:{productivityList: ["education", "med", "work", "tasks"], neturalList:["life"], destructiveList:['entertainment']}}
   
-  let Weekly = () => {
+  let Weekly = (props) => {
+      let [weekNum, setWeekNum] = useState(props.weekNum)
+      let requestData =  useFetch(`/api/weekly/${weekNum}`)
+      let data= null
+      let totalRecorded = 0
+      let dateRange = 'Sun Oct 31 - Sat Nov 5'
+      if(requestData) {
+        data = requestData.records
+        measureProductivity(data)
+        dateRange = myDate.oneWeek(data[0].id)
+        totalRecorded = productivity.counter.productive + productivity.counter.neutral + productivity.counter.destructive + productivity.counter.others
+      }
+
+      let adjustWeek = (arrow) => {
+        if (arrow == 'right-arrow') {
+          setWeekNum(weekNum + 1)
+        } else if (arrow == 'left-arrow') {
+          setWeekNum(weekNum - 1)
+        } else {
+          alert('pressed is: ' + arrow)
+        }
+      }
+
       return(
         <div class = 'columns'>
-          <CalendarView/>
-          <Summaries/>
+          <CalendarView dataC={data}/>
+          <Summaries onClick = {e => adjustWeek(e.target.id)} dateRange = {dateRange} totalRecorded = {totalRecorded}/>
           <Productivity/>
         </div>
       )
   }
 // {/* <h2 >{requested.date.slice(11)}</h2> */}
 
-let measureProductivity = (cal, spent) => {
-  if (productivity.list.productivityList.includes(cal.toLowerCase())) {
-    productivity.counter.productive += spent
-  } else if (productivity.list.neturalList.includes(cal.toLowerCase())) {
-    productivity.counter.neutral += spent
-  } else if (productivity.list.destructiveList.includes(cal.toLowerCase())) {
-    productivity.counter.destructive += spent
-  }
+let measureProductivity = (records) => {
+  productivity.counter ={productive: 0, neutral: 0, destructive: 0, others:0}
+  records.forEach((record) => {
+    if (productivity.list.productivityList.includes(record.calName.toLowerCase())) {
+      productivity.counter.productive += record.totalHours
+    } else if (productivity.list.neturalList.includes(record.calName.toLowerCase())) {
+      productivity.counter.neutral += record.totalHours
+    } else if (productivity.list.destructiveList.includes(record.calName.toLowerCase())) {
+      productivity.counter.destructive += record.totalHours
+    } else {
+      productivity.counter.others += record.totalHours
+    }
+  })
+  
 }
 
   const Week =  (requested) => {
@@ -103,12 +134,48 @@ let measureProductivity = (cal, spent) => {
     }
   }
 
-  let CalendarView = () => {
+  let CalendarView = (props) => {
+      let columnsData = [
+        {
+          Header: 'Calendar',
+          accessor: 'calName', // accessor is the "key" in the data
+        },
+        {
+          Header: 'Hours',
+          accessor: 'totalHours',
+        },
+      ]
+
+     
+      let data = [
+        {
+          "calName": 'Hello',
+          "totalHours": 100,
+          "id": 'World',
+          
+        },
+        {
+          "calName": 'Hello',
+          "totalHours": 100,
+          "id": 'World',
+        },
+        {
+          "calName": 'Hello',
+          "totalHours": 100,
+          "id": 'World',
+        },
+      ]
+    
+      if (props.dataC) {
+        data = props.dataC
+      }
+      
+
       return(
         <div class = 'column'>
             <p class="is-centered">Calendar</p>
             <ViewButtons type='calendar'/>
-            <TableData />
+            <TableData columnsT={columnsData} dataT={data}/>
 
         </div>
        
@@ -119,43 +186,12 @@ let measureProductivity = (cal, spent) => {
   
  
  
-  function TableData(columns1, data1) {
-    let requestData =  useFetch(`/api/weekly/${35}`)
-    let data = [
-      {
-        "calName": 'Hello',
-        "totalHours": 100,
-        "id": 'World',
-        
-      },
-      {
-        "calName": 'Hello',
-        "totalHours": 100,
-        "id": 'World',
-      },
-      {
-        "calName": 'Hello',
-        "totalHours": 100,
-        "id": 'World',
-      },
-    ]
-  
-    if(requestData) {
-      data = requestData.records
-    }
+  function TableData(props) {
+    
     const columns = React.useMemo(
-      () => [
-        {
-          Header: 'Calendar',
-          accessor: 'calName', // accessor is the "key" in the data
-        },
-        {
-          Header: 'Hours',
-          accessor: 'totalHours',
-        },
-      ],
-      []
+      () => props.columnsT, []
     )
+    let data = props.dataT
   
     const {
       getTableProps,
@@ -213,14 +249,27 @@ let measureProductivity = (cal, spent) => {
     )
   }
   
-  let Summaries = (timePeriod, totalHours) => {
+  let Summaries = (props) => {
     return (
-      <div class = 'column'>
-        <p> Summaries </p>
+      <div class = 'column is-centered'>
+        <h2> Summaries </h2>
+        <p> Total Hours: {props.totalRecorded}</p>
+        <DateRangeView 
+          dateRange={props.dateRange} 
+          onClick={props.onClick}
+          style={{height:10}}/>
+        
+        <ShowCalendar/>
+        
+      </div>
+    )
+  }
 
-        <div class="field has-addons">
+  let DateRangeView = (props) => {
+    return(
+      <div class="field has-addons is-centered">
           <p class="control">
-          <button id="left-arrow" class="button"> 
+          <button onClick={props.onClick} value= 'left' id="left-arrow" class="button"> 
             <span class="icon is-small">
               <i class="fas fa-arrow-circle-left"></i>
             </span>
@@ -228,33 +277,60 @@ let measureProductivity = (cal, spent) => {
           </p>
           <p class="control">
           <button class="button">
-            <span id="viewing"> Monday, November 9</span>
+            <span id="viewing"> {props.dateRange.weekStartDate} to {props.dateRange.weekEndDate} </span>
           </button>
           </p>
-          <p class="control">
-          <button id="right-arrow" class="button">
+          <p class="control" >
+          <button onClick={props.onClick} value = 'right' id="right-arrow" class="button">
             <span class="icon is-small">
               <i class="fas fa-arrow-alt-circle-right"></i>
           </span>
           </button>
           </p>
         </div>
-        
-        <p> Total Hours: 139</p>
-      </div>
     )
+  }
+  let ShowCalendar = () => {
+     // ✅ a change in default state: { from: ..., to: ... }
+    const [selectedDayRange, setSelectedDayRange] = useState({
+      from: null,
+      to: null
+    });
+    return (
+      <Calendar
+        value={selectedDayRange}
+        onChange={setSelectedDayRange}
+        shouldHighlightWeekends
+        style={{height: '60%'}}
+      />
+    );
   }
 
   let Productivity = () => {
+    let columnsData = [
+      {
+        Header: 'Productive',
+        accessor: 'productive', // accessor is the "key" in the data
+      },
+      {
+        Header: 'Neutral',
+        accessor: 'neutral',
+      },
+      {
+        Header: 'Destructive',
+        accessor: 'destructive',
+      },
+    ]
+
+    let data = [productivity.counter]
     return (
       <div class = 'column'> 
           <p> Productivity</p>
           <ViewButtons type='productivity'/>
-          <TableData/>
+          <TableData columnsT={columnsData} dataT={data}/>
       </div>
       
 
     )
   }
     export default Weekly;
-

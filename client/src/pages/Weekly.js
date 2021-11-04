@@ -5,43 +5,30 @@ import * as myDate from '../date.js';
 import { useTable } from 'react-table'
 
   let productivity = {counter: [{productive: 0}, {neutral: 0}, {destructive: 0}], list:{productivityList: ["education", "med", "work", "tasks"], neturalList:["life"], destructiveList:['entertainment']}}
-  const Weekly = (requested) => {
+  
+  class Weekly extends React.Component {
+    render() {
+      return(
+        <>
+            <div class = 'columns'>
+              <div class = 'column'>
+                <div class = 'column'>
+                  <CalendarView/>
+                </div>
+                
+              </div>
+              <div class = 'column'>
+                <Summaries/>
+              </div>
+              <div class = 'column'> 
+                Productivity View
+              </div>
+            </div>
+            
+        </>
+      )
+    }
     
-    return(
-      <>
-          <div class = 'columns'>
-            <div class = 'column'>
-              <div class = 'column'>
-                <CalendarView/>
-              </div>
-              <div class = 'column'>
-                <TableData />
-              </div>
-            </div>
-            <div class = 'column'>
-              <Summaries/>
-            </div>
-            <div class = 'column'> 
-              Productivity View
-            </div>
-          </div>
-
-          <table class="table is-bordered is-striped is-narrow"> 
-                  <tr class='tc'> <Week date={`/api/weekly/${35}`}/> </tr>
-                  <tr class='tc'> <Week date={`/api/weekly/${36}`}/> </tr>
-                  <tr class='tc'> <Week date={`/api/weekly/${37}`}/> </tr>
-                  <tr class='tc'> <Week date={`/api/weekly/${38}`}/> </tr>
-                  <tr class='tc'> <Week date={`/api/weekly/${39}`}/> </tr>
-                  <tr class='tc'> <Week date={`/api/weekly/${40}`}/> </tr>
-                  <tr class='tc'> <Week date={`/api/weekly/${41}`}/> </tr>
-                  <tr class='tc'> <Week date={`/api/weekly/${42}`}/> </tr>
-                  <tr class='tc'> <Week date={`/api/weekly/${43}`}/> </tr>
-                  <tr class='tc'> <Week date={`/api/weekly/${44}`}/> </tr>
-                  <tr class='tc'> <Week date={`/api/weekly/${45}`}/> </tr>
-                </table>
-          
-      </>
-    )
   }
 // {/* <h2 >{requested.date.slice(11)}</h2> */}
 
@@ -115,20 +102,39 @@ let measureProductivity = (cal, spent) => {
       alert('there')
     }
   
-  
-  let CalendarView = () => {
+  function  ViewButtons (props) {
     return(
-      <>
-          <p class="is-centered">Calendar</p>
           <div class='buttons has-addons '>
             <button class = "button" > Graph </button>
-            <button  class = 'button is-selected'> Table</button>
+            <button  value = "table" class = 'button is-selected' onClick = {(event) => handleViewButton(props.type, event.target.value)}> Table</button>
             <button class='button'> Text </button>
           </div>
-          
-      </>
-     
     )
+  }
+
+  let handleViewButton = (type, selected) => {
+    if (type == "calendar") {
+      alert('in ' + type + ' view ' + selected  +  ' is selected.')
+    }
+  }
+
+  class CalendarView extends React.Component {
+   
+
+
+    render() {
+      return(
+        <>
+            <p class="is-centered">Calendar</p>
+            <ViewButtons type='calendar'/>
+            <TableData />
+      
+            
+        </>
+       
+      )
+    }
+    
   }
   
   
@@ -232,21 +238,29 @@ let measureProductivity = (cal, spent) => {
     return (
       <>
         <p> Summaries </p>
-        <div class="buttons has-addons">
+
+        <div class="field has-addons">
+          <p class="control">
           <button id="left-arrow" class="button"> 
             <span class="icon is-small">
               <i class="fas fa-arrow-circle-left"></i>
             </span>
           </button>
+          </p>
+          <p class="control">
           <button class="button">
             <span id="viewing"> Monday, November 9</span>
           </button>
+          </p>
+          <p class="control">
           <button id="right-arrow" class="button">
             <span class="icon is-small">
               <i class="fas fa-arrow-alt-circle-right"></i>
           </span>
           </button>
+          </p>
         </div>
+        
         <p> Total Hours: 139</p>
       </>
     )

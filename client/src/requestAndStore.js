@@ -5,6 +5,7 @@ let starterURL = 'http://localhost:5000/'
 let calendarList = [];
 let eventList = [];
 let gapi = window.gapi; 
+let numberOfEvents = 0
 
    export async function listOfCalendars() {
     try {
@@ -14,7 +15,7 @@ let gapi = window.gapi;
           let calendar = calendars[i];
           calendarList.push(calendar.summary)
           let dayAhead = myDate.updateDate(new Date(), 7);
-          let dayBehind = myDate.updateDate(new Date(), -30);
+          let dayBehind = myDate.updateDate(new Date(), -80);
           events('day', calendar.summary, calendar.id, dayBehind.toISOString(), dayAhead.toISOString());
         }
     } catch (error) {
@@ -36,6 +37,7 @@ let gapi = window.gapi;
  * Eventually, it will populate @object weeklyData and call @function sendToServer() 
  */
  async function events(timeId, calName, calId, minDate, maxDate) {
+
   //  console.log(`called with ${timeId}, ${calName}, ${new Date(minDate).toLocaleString()}, ${new Date(maxDate).toLocaleString()}`)
   try {
     let response = await gapi.client.calendar.events.list({
@@ -52,16 +54,18 @@ let gapi = window.gapi;
   const events = response.result.items;
   let requestFrom = new Date(minDate);
   let requestUpTo = new Date(maxDate);
-  console.log('sleep requesting from: ' + requestFrom + ' upto ' + requestUpTo);
+  // console.log('sleep requesting from: ' + requestFrom + ' upto ' + requestUpTo);
   events.forEach((event) => {
-     console.log(event.summary + ':' + new Date(event.start.dateTime).toLocaleString() + ':' + new Date(event.end.dateTime).toLocaleString() + ':' + calName + ':' + 3 + ':' + 3)
+      numberOfEvents++;
+      console.log('num of events is: '+ numberOfEvents)
+    //  console.log(event.summary + ':' + new Date(event.start.dateTime).toLocaleString() + ':' + new Date(event.end.dateTime).toLocaleString() + ':' + calName + ':' + 3 + ':' + 3)
      if (event.summary !== undefined && !event.start.date) { // ignores undefined and all day events
       if (!(eventList.includes(event.summary))) {
         eventList.push(event.summary)
       }
       let eventStartsAt = new Date(event.start.dateTime);
       let eventEndsAt = new Date(event.end.dateTime);
-      let eventDuration =  myDate.timeBetween(eventStartsAt, eventEndsAt).hours
+      let eventDuration =  roundTo2Decimals(myDate.timeBetween(eventStartsAt, eventEndsAt).hours)
       
       
       //if event goes to the next day break it into to events upto 11:59:59 and 12 after that
@@ -81,8 +85,8 @@ let gapi = window.gapi;
         let weekNum2 = myDate.weekNumber(eventEndsAt)
         let monthNum1 = eventStartsAt.getMonth()
         let monthNum2 = eventEndsAt.getMonth()
-        let eventDuration1 = myDate.timeBetween(eventStartsAt, dayEndsAt).hours
-        let eventDuration2 = myDate.timeBetween(nextDayStartsAt, eventEndsAt).hours
+        let eventDuration1 = roundTo2Decimals(myDate.timeBetween(eventStartsAt, dayEndsAt).hours)
+        let eventDuration2 = roundTo2Decimals(myDate.timeBetween(nextDayStartsAt, eventEndsAt).hours)
         sendPost(eventStartsAt.toDateString(), event.summary, eventStartsAt, dayEndsAt, calName, event.description, eventDuration1, weekNum1, monthNum1)
         sendPost(eventEndsAt.toDateString(), event.summary, nextDayStartsAt, eventEndsAt, calName, event.description, eventDuration2, weekNum2, monthNum2)
         // console.log(eventStartsAt.toDateString(), event.summary, eventStartsAt.toDateString(), dayEndsAt.toDateString(), calName, event.description, eventDuration1, weekNum1, monthNum1)
@@ -127,4 +131,8 @@ let gapi = window.gapi;
   } catch (error) {
     alert('error in requestAndStore-> sendPost: ' + error.message)
   }
+ }
+
+ function roundTo2Decimals(number) {
+   return Math.round(number*100)/100
  }

@@ -3,29 +3,33 @@ export const weeksRouter = express.Router();
 import sqlite3 from 'sqlite3';
 const db = new sqlite3.Database(process.env.TEST_DATABASE || './db.sqlite')
 
-weeksRouter.param('weekId', (req, res, next, weekId) => { // check if Id exits (simplifying)
-    const sql = 'SELECT * FROM Weeks WHERE Weeks.id = $weekId ';
-    const values = {$weekId: weekId};
-    db.get(sql, values, (error, week) => {
-        if(error) {
-            next(error);
-        } else if (week) {
-            req.week = week;
-            next();
-        } else {
-            res.sendStatus(404);
-        }
-    })
-})
+// weeksRouter.param('weekId', (req, res, next, weekId) => { // check if Id exits (simplifying)
+//     const sql = 'SELECT * FROM Records WHERE Weeks.id = $weekId ';
+//     const values = {$weekId: weekId};
+//     db.get(sql, values, (error, week) => {
+//         if(error) {
+//             next(error);
+//         } else if (week) {
+//             req.week = week;
+//             next();
+//         } else {
+//             res.sendStatus(404);
+//         }
+//     })
+// })
 
 weeksRouter.get('/', (req, res, next) => {
-    const sql = 'SELECT * FROM Weeks';
-    value = {demo: 'demo'}
-    db.all(sql, values, (error, week) => {
+    console.log('HELLLOW ')
+    const sql = `SELECT calName, weekNum , SUM(duration) as totalHours FROM Records 
+                GROUP BY calName, weekNum
+                ORDER BY weekNum, calName
+                ` 
+    
+    db.all(sql, (error, data) => {
         if(error) {
             next(error);
-        } else if (week) {
-            res.status(200).json({week: week})
+        } else if (data) {
+            res.status(200).json({records: data})
             next();
         } else {
             res.sendStatus(404);
@@ -46,17 +50,15 @@ weeksRouter.get('/', (req, res, next) => {
 }) 
 
 weeksRouter.get('/:weekId', (req, res, next) => {
-    
-    console.log(req.session);
-    res.status(200).json({week: req.week})
-
-    let type = calName
-    let weekNum = 42
-    const sql = `SELECT ${type} , sum(duration) as totalHours` + 
-    "FROM Records" + 
-    `WHERE weekNum = ${weekNum}` + 
-    "GROUP BY calName" + 
-    "ORDER BY totalHours DESC"
+    console.log('HELLLO ')
+  
+    let type = 'calName'
+    let weekNum = req.params.weekId
+    const sql =`SELECT ${type} , sum(duration) as totalHours, id 
+                FROM Records
+                WHERE weekNum = ${weekNum} 
+                GROUP BY calName
+                ORDER BY totalHours DESC `
 
     db.all(sql, (error, data) => {
         if(error) {

@@ -36,3 +36,27 @@
     transform: rotate(360deg);
   }
 }
+
+/* Daily.js */
+.short {
+  height: 1px
+}
+
+/* tc - table column ... fills column first instead of tr - row first */
+tr.tc {
+  display: block;
+  float: left;
+}
+
+th.tc, td.tc {
+  display: block;
+}
+
+/* element under button fire the button press event */
+button > * {
+  pointer-events: none;
+}
+
+/* .textInside {
+  width: 400px
+} */

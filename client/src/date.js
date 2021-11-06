@@ -3,7 +3,7 @@
  * @return {date} the new date shifted by the number 
  * example: updateDate(today, 1) gives you the next day
  */
- export function updateDate(currentDate, shift) {
+  function updateDate(currentDate, shift) {
     if(shift < 0 && Math.abs(shift) > currentDate.getDate()) {
         currentDate.setMonth(currentDate.getMonth() - 1) 
         currentDate.setDate(currentDate.getDate() +  shift + daysInAMonth(currentDate.getMonth()));
@@ -30,7 +30,7 @@
     }
   }
   
-  export function timeZone(string) {
+   function timeZone(string) {
     if(string.includes('Pacific')) {
         return 'America/Los_Angeles'
     } else if (string.includes('Eastern')) {
@@ -56,7 +56,7 @@
    * 
    * @return Object date2 -date1 in {ms: ms, minutes: minutes, hours: hours, days: days, years: years}
    */
-   export function timeBetween (date1, date2) {
+  function timeBetween (date1, date2) {
     let ms = date2.getTime() - date1.getTime();
     let minutes = ms/(1000*60);
     let hours = minutes/60;
@@ -71,7 +71,7 @@
    * @param {Date Object} date 
    * @returns {integer} week number
    */
-   export function weekNumber (date) {
+   function weekNumber (date) {
     let yearStarts = new Date(date.getFullYear(), 0, 1, 0, 0)
     let secondWeekStartsOn = secondWeekStarts(yearStarts)
     yearStarts.setDate(secondWeekStartsOn)
@@ -82,3 +82,75 @@
   function secondWeekStarts(date) {
     return 8 - date.getDay()
   }
+
+  /**
+ * @param {Date} date
+ * @param {number} days
+ * @return {number} day updated incase it's below 0 or above number of dates in that month
+ */
+function validityCheck (date, day) {
+    // console.log('in validity check day is: ' + day)
+    // console.log('date is: ' + date.toDateString())
+    if(day < 0) {
+        // console.log(daysInAMonth(date.getMonth() - 1))
+        return day + daysInAMonth(date.getMonth() - 1)
+
+    } else if (day > 23) {
+        if(day > daysInAMonth(date.getMonth())) {
+            return day - daysInAMonth(date.getMonth());
+        } else {
+            return day;
+        }
+    } else {
+        return day;
+        
+    }
+}
+
+/** after this is getting weekly range */
+function adjustDate(date) {
+    let day = new Date(date).getDay();
+    let shiftLeft = 0
+    let shiftRight = 0
+    if (day == 0){
+        shiftRight = 6
+    } else if (day == 1) {
+        shiftLeft = -1
+        shiftRight = 5
+    } else if (day == 2) {
+        shiftLeft = -2
+        shiftRight = 4
+    } else if (day == 3) {
+        shiftLeft = -3
+        shiftRight = 3
+    } else if (day == 4) {
+        shiftLeft = -4
+        shiftRight = 2
+    } else if (day == 5) {
+        shiftLeft = -5
+        shiftRight = 1
+    } else if (day == 6) {
+        shiftLeft = -6
+    } else {
+        alert('no shift made')
+    }
+
+    return{shiftLeft: shiftLeft, shiftRight: shiftRight}
+}
+
+ function oneWeek(date) {
+    let shifts = adjustDate(date)
+    console.log(shifts.shiftLeft + ' ' + shifts.shiftRight)
+    let weekStartsOn = new Date(date)
+    let weekEndsOn = new Date(date)
+    weekStartsOn = updateDate(weekStartsOn, shifts.shiftLeft)
+    weekEndsOn = updateDate(weekEndsOn, shifts.shiftRight)
+    return {weekStartsOn: weekStartsOn, weekEndsOn: weekEndsOn}
+}
+
+let input = 'Mon Nov 29 2021'
+let date = new Date(input)
+let givenWeek = oneWeek(date)
+console.log(givenWeek.weekStartsOn.toDateString() + ' ' + givenWeek.weekEndsOn.toDateString())
+
+export {updateDate, timeZone, timeBetween, weekNumber, oneWeek}

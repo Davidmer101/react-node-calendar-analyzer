@@ -6,7 +6,7 @@ import 'bulma/css/bulma.min.css';
 function Nav() {
     return(
         
-        <nav class="navbar" role="navigation" aria-label="main navigation">
+        <nav class="navbar is-light" role="navigation" aria-label="main navigation">
             <div class="navbar-brand">
                 <Link to="/" class="navbar-item" > 
                 {/* <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28"></img> */}
@@ -50,33 +50,6 @@ function Nav() {
                             </a>
                         </div>
                     </div>
-                    
-                    <div class="dropdown is-hoverable">
-  <div class="dropdown-trigger">
-    <button class="button" aria-haspopup="true" aria-controls="dropdown-menu2">
-      <span>Content</span>
-      <span class="icon is-small">
-        <i class="fas fa-angle-down" aria-hidden="true"></i>
-      </span>
-    </button>
-  </div>
-  <div class="dropdown-menu" id="dropdown-menu2" role="menu">
-    <div class="dropdown-content">
-      <div class="dropdown-item">
-        <p>You can insert <strong>any type of content</strong> within the dropdown menu.</p>
-      </div>
-      <hr class="dropdown-divider"/>
-      <div class="dropdown-item">
-        <p>You simply need to use a <code>&lt;div&gt;</code> instead.</p>
-      </div>
-      <hr class="dropdown-divider"/>
-      <Link to="/" class="dropdown-item">
-        This is a link
-      </Link>
-    </div>
-  </div>
-</div>
-
                     <div class="navbar-item">
                         <div class="buttons">
                             <a class="button is-primary">

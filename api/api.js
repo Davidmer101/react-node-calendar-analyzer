@@ -4,7 +4,7 @@ import {weeksRouter} from './weeks.js'
 import {usersRouter} from './users.js'
 import {daysRouter} from './daily.js'
 
-apiRouter.use('/weeks', weeksRouter);
+apiRouter.use('/weekly', weeksRouter);
 apiRouter.use('/users', usersRouter);
 apiRouter.use('/daily', daysRouter);
 

@@ -15,7 +15,7 @@ function Nav() {
                         <span class="icon">
                         <i class="fas fa-history"></i>
                         </span>
-                        <span class="m-0 p-0 has-text-link" id = 'logo'>Lastweek</span>
+                        <span class="m-0 p-0 has-text-link" id = 'logo'>GCAnalyzer</span>
                     </span>
                 </Link>
 
@@ -28,8 +28,8 @@ function Nav() {
 
             <div id="navbarBasicExample" class="navbar-menu"> 
                 <div class="navbar-start">
-                    <Link to="/daily" class="navbar-item" > daily </Link>
-                    <Link to="/weekly" class="navbar-item"> weekly </Link>
+                    <Link to="/daily" class="navbar-item" > Daily </Link>
+                    <Link to="/weekly" class="navbar-item"> Weekly </Link>
                     <Link to="/monthly" class="navbar-item"> Monthly </Link> 
 
                     

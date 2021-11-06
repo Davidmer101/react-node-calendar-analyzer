@@ -18,7 +18,6 @@ function Index () {
   return (
     <Router>
       <Nav/>      
-      <hr />
       <Switch>
         <Route exact path="/">
           <Home />

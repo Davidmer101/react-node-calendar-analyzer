@@ -46,12 +46,21 @@ daysRouter.get('/', (req, res, next) => {
 
 daysRouter.get('/:dayId', (req, res, next) => {
     let type = 'calName'
-    const sql = `SELECT ${type}, SUM(duration) as TotalHours FROM Records WHERE Records.id = "${req.params.dayId}" Group By ${type} Order By ${type}`
-    db.all(sql, (error, data) =>{
-        if (error) {
-            res.status(401).json({error: error.message, dayId: req.params.dayId});
+    let day = req.params.dayId
+
+    const sql =`SELECT ${type} , sum(duration) as totalHours, id 
+                FROM Records
+                WHERE id = "${day}" 
+                GROUP BY calName
+                ORDER BY totalHours DESC `
+    db.all(sql, (error, data) => {
+        if(error) {
+            next(error)
+        } else if (data) {
+            res.status(200).json({records: data})
+            next();
         } else {
-            res.status(200).json({records: data});
+            res.sendStatus(404);
         }
     })
     
@@ -142,7 +151,7 @@ daysRouter.put('/:weekId', (req, res, next) => {
 })
 
 daysRouter.delete('/', (req, res, next) => {
-    const sql = `DELETE FROM Weeks`;
+    const sql = `DELETE FROM Records`;
     db.run(sql, (error) => {
         if(error) {
             next(error);

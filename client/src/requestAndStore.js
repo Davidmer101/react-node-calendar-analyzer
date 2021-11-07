@@ -15,7 +15,7 @@ let numberOfEvents = 0
           let calendar = calendars[i];
           calendarList.push(calendar.summary)
           let dayAhead = myDate.updateDate(new Date(), 7);
-          let dayBehind = myDate.updateDate(new Date(), -80);
+          let dayBehind = myDate.updateDate(new Date(), -35);
           events('day', calendar.summary, calendar.id, dayBehind.toISOString(), dayAhead.toISOString());
         }
     } catch (error) {
@@ -43,11 +43,11 @@ let numberOfEvents = 0
     let response = await gapi.client.calendar.events.list({
       'calendarId': calId,
       'singleEvents': true,
-      'orderBy': 'startTime',
+      // 'orderBy': 'startTime',
       'timeZone': myDate.timeZone(new Date().toString()),
       'timeMin': minDate,
       'timeMax': maxDate,
-      'maxResults': 2500,
+      'maxResults': 2400,
       
   });
 

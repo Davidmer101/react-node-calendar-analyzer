@@ -32,7 +32,7 @@ function Index () {
           <App/>
         </Route>
         <Route path="/daily">
-          <Daily/>
+          <Daily day={new Date()}/>
         </Route>
         <Route path="/weekly">
           <Weekly weekNum = {43}/>

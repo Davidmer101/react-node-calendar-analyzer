@@ -44,11 +44,11 @@ import { Calendar } from "react-modern-calendar-datepicker";
       }
 
       return(
-        <div class = 'columns'>
-          <CalendarView dataC={data}/>
-          <Summaries onClick = {e => adjustWeek(e)} dateRange = {dateRange} />
-          <Productivity totalRecorded = {totalRecorded}/>
-        </div>
+          <div class = 'columns'>
+            <CalendarView dataC={data}/>
+            <Summaries onClick = {e => adjustWeek(e)} dateRange = {dateRange} />
+            <Productivity totalRecorded = {totalRecorded}/>
+          </div>
       )
   }
 // {/* <h2 >{requested.date.slice(11)}</h2> */}
@@ -72,11 +72,11 @@ let measureProductivity = (records) => {
   const Week =  (requested) => {
 
     // alert(requested.date)
-    let data =  useFetch(requested.date)
+    let data =  useFetch(`/api/weekly/`)
     productivity = {counter: [{productive: 0}, {neutral: 0}, {destructive: 0}], list:{productivityList: ["education", "med", "work", "tasks"], neturalList:["life"], destructiveList:['entertainment']}}
     let calNames = ['Education', 'Entertainment', 'Life', 'MED', 'Work']
     let editedData = {records: []}
-    // alert('data is '+ JSON.stringify(data))
+    alert('data is '+ JSON.stringify(data))
     // data = {"records":[{"calName":"Education","totalHours":1.25},{"calName":"Entertainment","totalHours":1},{"calName":"Life","totalHours":20.99972222222222}]}
     if(data) {
       let calendars = []

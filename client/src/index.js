@@ -11,6 +11,7 @@ import Weekly from "./pages/Weekly";
 import Contact from "./pages/Contact";
 import Nav from "./pages/Nav";
 import 'bulma/css/bulma.min.css';
+import * as myDate from './date.js';
 
 
 function Index () {
@@ -35,7 +36,7 @@ function Index () {
           <Daily day={new Date()}/>
         </Route>
         <Route path="/weekly">
-          <Weekly weekNum = {43}/>
+          <Weekly weekNum = {myDate.weekNumber(new Date())}/>
         </Route>
       </Switch>
     </Router>

@@ -18,7 +18,9 @@ import { Calendar } from "react-modern-calendar-datepicker";
       if(requestData) {
         data = requestData.records
         measureProductivity(data)
-        dateRange = myDate.oneWeek(data[0].id)
+        if(data.length > 0) {
+          dateRange = myDate.oneWeek(data[0].id)
+        }
         totalRecorded = productivity.counter.productive + productivity.counter.neutral + productivity.counter.destructive + productivity.counter.others
       }
 

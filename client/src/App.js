@@ -43,7 +43,7 @@ class App extends React.Component {
 
   updateSignInStatus(signedIn) {
     if (signedIn) {
-      // alert('signIn Confirmed')
+      alert('signIn Confirmed')
       myRequestAndStore.listOfCalendars()
     }
   }

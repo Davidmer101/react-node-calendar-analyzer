@@ -44,11 +44,40 @@ import { Calendar } from "react-modern-calendar-datepicker";
       }
 
       return(
-          <div class = 'columns'>
-            <CalendarView dataC={data}/>
-            <Summaries onClick = {e => adjustWeek(e)} dateRange = {dateRange} />
-            <Productivity totalRecorded = {totalRecorded}/>
-          </div>
+        <>
+              <div class = 'columns'>
+                <CalendarView dataC={data}/>
+                <Summaries onClick = {e => adjustWeek(e)} dateRange = {dateRange} />
+                <Productivity totalRecorded = {totalRecorded}/>
+              </div>
+              <div class ='column'>
+                
+              </div>
+              <div class = 'columns'>
+                <div class = 'column'>
+                  <Day date={(dateRange.weekStartsOn).toDateString()} />
+                </div>
+                <div class ='column'>
+                  <Day date={(myDate.updateDate(new Date(dateRange.weekStartsOn), 1 )).toDateString()} />
+                </div>
+                <div class ='column'>
+                  <Day date={(myDate.updateDate(new Date(dateRange.weekStartsOn), 2 )).toDateString()} />
+                </div>
+                <div class ='column'>
+                  <Day date={(myDate.updateDate(new Date(dateRange.weekStartsOn), 3 )).toDateString()} />
+                </div>
+                <div class ='column' >
+                  <Day date={(myDate.updateDate(new Date(dateRange.weekStartsOn), 4 )).toDateString()} />
+                </div>
+                <div class ='column'>
+                  <Day date={(myDate.updateDate(new Date(dateRange.weekStartsOn), 5)).toDateString()} />
+                </div>
+                <div class ='column'>
+                  <Day date={(myDate.updateDate(new Date (dateRange.weekStartsOn), 6 )).toDateString()} />
+                </div>
+                  
+              </div>
+        </>
       )
   }
 // {/* <h2 >{requested.date.slice(11)}</h2> */}
@@ -69,6 +98,47 @@ let measureProductivity = (records) => {
   
 }
 
+const Day =  (requested) => {
+  // alert(requested.date)
+  let data =  useFetch(`/api/daily/${requested.date}`)
+  let calNames = ['Education', 'Entertainment', 'Life', 'MED', 'Work']
+  let editedData = {records: []}
+  // alert('data is '+ JSON.stringify(data))
+  // data = {"records":[{"calName":"Education","TotalHours":1.25},{"calName":"Entertainment","TotalHours":1},{"calName":"Life","TotalHours":20.99972222222222}]}
+  if(data) {
+    let calendars = []
+    data.records.map(record => {
+      calendars.push( record.calName)
+    })
+    // alert(JSON.stringify( 'calendars are ' + calendars))
+    // alert(calendars.includes("Education"))
+    for(let i = 0; i < calNames.length; i++) {
+    
+      if(calendars.includes(calNames[i])) {
+        data.records.forEach(record => {
+          if (record.calName == calNames[i]) {
+            editedData.records[i] = record
+          }
+        })
+        
+      } else {
+        editedData.records[i] = {calName: calNames[i], totalHours: 0}
+      }
+    }
+
+    // alert('edited data is ' + JSON.stringify(editedData))
+    return (
+      <>
+        <th class='tc' style={{backgroundColor: "aliceblue"}} >{requested.date.slice(0,11)}</th>
+        {editedData.records.map(
+          (record) =>  <td  class='tc' style={{backgroundColor: "papayawhip"}}> {record.calName} : {Math.round(record.totalHours * 100)/100} </td>
+        )}
+      </>
+    )
+  } else {
+    return 'Loading'
+  }
+  };
   const Week =  (requested) => {
 
     // alert(requested.date)

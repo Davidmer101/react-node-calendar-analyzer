@@ -48,14 +48,12 @@ import { Calendar } from "react-modern-calendar-datepicker";
       }
 
       return(
-        <div class = 'columns'>
-          <CalendarView dataC={data}/>
-          <Summaries onClick = {e => adjustDay(e)} dateRange = {dateRange} />
-          <Productivity totalRecorded = {totalRecorded}/>
-          
-        </div>
-        
-      )
+          <div class = 'columns'>
+            <CalendarView dataC={data}/>
+            <Summaries onClick = {e => adjustDay(e)} dateRange = {dateRange} />
+            <Productivity totalRecorded = {totalRecorded}/>
+          </div>
+      )   
   }
 // {/* <h2 >{requested.date.slice(11)}</h2> */}
 
@@ -374,7 +372,7 @@ let measureProductivity = (records) => {
 
   const Day =  (requested) => {
     // alert(requested.date)
-    let data =  useFetch(requested.date)
+    let data =  useFetch(`/api/daily/${requested.date}`)
     let calNames = ['Education', 'Entertainment', 'Life', 'MED', 'Work']
     let editedData = {records: []}
     // alert('data is '+ JSON.stringify(data))
@@ -400,12 +398,12 @@ let measureProductivity = (records) => {
         }
       }
 
-      // alert('edited data is ' + JSON.stringify(editedData))
+      alert('edited data is ' + JSON.stringify(editedData))
       return (
         <>
-          <th class='tc' >{requested.date.slice(11)}</th>
+          <th class='tc' >{requested.date.slice(0,11)}</th>
           {editedData.records.map(
-            (record) =>  <td  class='tc'> {record.calName} : {Math.round(record.TotalHours * 100)/100} </td>
+            (record) =>  <td  class='tc'> {record.calName} : {Math.round(record.totalHours * 100)/100} </td>
           )}
         </>
       )

@@ -74,3 +74,13 @@ button > * {
 .custom-today-day::after {
   visibility: hidden; /* hide small border under the text */
 }
+
+#authorize-view {
+  margin: 20% auto 15% auto; /* 25% from the top, 15% from the bottom and centered */
+  width: 80%; /* Could be more or less, depending on screen size */
+  color: yellow;
+}
+
+#firstRead {
+  margin-top: auto;
+}

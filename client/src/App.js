@@ -4,6 +4,7 @@ import './App.css';
 import * as myRequestAndStore from './requestAndStore.js'
 import axios from 'axios';
 import RequestMyServer from './requestMyServer.js';
+import Contact from './pages/Contact.js';
 
 class App extends React.Component {
   gapi = window.gapi;  
@@ -66,8 +67,9 @@ class App extends React.Component {
     return (
       <div className="App">
         <header className="App-header">
+        
+        < Homepage onClick={this.handleClick}/>
         < RequestMyServer />
-          <p> Edit <code>src/App.js</code> and save to reload. </p>
           <p>
             <button onClick={this.handleClick}> List Events  </button>
              {/* <!--Add buttons to initiate auth sequence and sign out--> */}
@@ -93,5 +95,60 @@ class App extends React.Component {
   
 }
 
-
+let Homepage = (props) => {
+  return(
+    <div class="hero-body">
+        <div class="container">
+          <div class="columns">
+            <div class="column is-three-fifths">
+              <div id = "firstRead">
+                <div class="block">
+                  <h1 class="title" style={{color: "lightblue"}}>Analyze Your Calendar</h1>
+                  <h6 class="subtitle" style={{color: "gray"}}>Made with Google Calendar API</h6>
+                </div>
+                <div class="block">
+                  <p class = 'homePageParagraph'> Analyze and learn how you spent your past days, weeks, or months from your google calendar.  
+                    This web app analyzes how you spent your time by feching events from your google calendar.  
+                </p>  
+              </div>
+              </div>
+              
+            </div>
+            <div class="column">
+              
+              <div id = 'authorize-view'>
+                <div class="block">
+                  <p> Pressing the 'Authorize' button below authorizes this web app to read your google calendar events.
+                    Access to your calendar events data is terminated once you sign out. 
+                    See <a class="tag is-primary is-light"> Privacy Policy </a> to learn more:
+                </p>
+                </div> 
+                <div class="block">
+                  <button onClick={props.onClick} id="authorize_button"  class="button is-primary">
+                    <span class="icon">
+                      <i class="fab fa-google"></i>
+                    </span>
+                    <span> Authorize</span>
+                  </button>            
+                </div> 
+                <div class="block"> 
+                  Erase your data by pressing:
+                </div>
+                <Contact />
+                <hr/>
+                <p> Currently the app is not verifed by Google as it is in a developement process. 
+                  You can use the following email and password for authorization. 
+                    </p>
+                    <br/>
+                  <ul>
+                    <li>username: demofor426</li>
+                    <li>password: Comp4262020</li>
+                  </ul>
+              </div>
+            </div>
+          </div>       
+        </div>  
+      </div>
+  )
+}
 export default App;

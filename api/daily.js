@@ -49,7 +49,7 @@ daysRouter.get('/:dayId', (req, res, next) => {
     let day = req.params.dayId
 
     const sql =`SELECT ${type} , sum(duration) as totalHours, id 
-                FROM Records
+                FROM (SELECT DISTINCT id, calName, duration FROM Records)
                 WHERE id = "${day}" 
                 GROUP BY calName
                 ORDER BY totalHours DESC `
@@ -77,7 +77,6 @@ daysRouter.post('/', (req, res, next) => {
     const duration = req.body.duration;
     const weekNum = req.body.weekNum;
     const monthNum = req.body.monthNum;
-    console.log('from days post:' + JSON.stringify(req.body));
     // const username = req.session.user;
     // if(!id || !username) {
     //     return res.status(200).json({username: username});

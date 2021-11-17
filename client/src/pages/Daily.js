@@ -8,23 +8,19 @@ import { useTable } from 'react-table'
 import "react-modern-calendar-datepicker/lib/DatePicker.css";
 import DatePicker from "react-modern-calendar-datepicker";
 import { Calendar } from "react-modern-calendar-datepicker";
+import {CalendarView, Productivity} from './Views.js';
 
-  let productivity = {counter: {productive: 0, neutral: 0, destructive: 0, others:0}, list:{productivityList: ["education", "med", "work", "tasks"], neturalList:["life"], destructiveList:['entertainment']}}
-  
   let Daily = (props) => {
       let [day, setDay] = useState(props.day)
       let requestData =  useFetch(`/api/daily/${day.toDateString()}`)
       let data= null
-      let totalRecorded = 0
       let dateRange = day
       if(requestData) {
         data = requestData.records
-        measureProductivity(data)
         if (data.length > 0) {
           dateRange = new Date(data[0].id)
         }
         
-        totalRecorded = productivity.counter.productive + productivity.counter.neutral + productivity.counter.destructive + productivity.counter.others
       } else {
         // alert('no data stored for this day')
         dateRange =  day
@@ -51,31 +47,13 @@ import { Calendar } from "react-modern-calendar-datepicker";
           <div class = 'columns'>
             <CalendarView dataC={data}/>
             <Summaries onClick = {e => adjustDay(e)} dateRange = {dateRange} />
-            <Productivity totalRecorded = {totalRecorded}/>
+            <Productivity data = {data}/>
           </div>
       )   
   }
 // {/* <h2 >{requested.date.slice(11)}</h2> */}
 
-let measureProductivity = (records) => {
-  productivity.counter ={productive: 0, neutral: 0, destructive: 0, others:0}
-  records.forEach((record) => {
-    if (productivity.list.productivityList.includes(record.calName.toLowerCase())) {
-      productivity.counter.productive += record.totalHours
-    } else if (productivity.list.neturalList.includes(record.calName.toLowerCase())) {
-      productivity.counter.neutral += record.totalHours
-    } else if (productivity.list.destructiveList.includes(record.calName.toLowerCase())) {
-      productivity.counter.destructive += record.totalHours
-    } else {
-      productivity.counter.others += record.totalHours
-    }
-  })
-  
-}
-
-
-
-  
+ 
   function  ViewButtons (props) {
     return(
           <div class='buttons has-addons '>
@@ -92,122 +70,7 @@ let measureProductivity = (records) => {
     }
   }
 
-  let CalendarView = (props) => {
-      let columnsData = [
-        {
-          Header: 'Calendar',
-          accessor: 'calName', // accessor is the "key" in the data
-        },
-        {
-          Header: 'Hours',
-          accessor: 'totalHours',
-        },
-      ]
-
-     
-      let data = [
-        {
-          "calName": 'Hello',
-          "totalHours": 100,
-          "id": 'World',
-          
-        },
-        {
-          "calName": 'Hello',
-          "totalHours": 100,
-          "id": 'World',
-        },
-        {
-          "calName": 'Hello',
-          "totalHours": 100,
-          "id": 'World',
-        },
-      ]
-    
-      if (props.dataC) {
-        data = props.dataC
-      }
-      
-
-      return(
-        <div class = 'column'>
-            <p class="is-centered">Calendar</p>
-            <ViewButtons type='calendar'/>
-            <TableData columnsT={columnsData} dataT={data}/>
-
-        </div>
-       
-      )
-    
-  }
   
-  
- 
- 
-  function TableData(props) {
-    
-    const columns = React.useMemo(
-      () => props.columnsT, []
-    )
-    let data = props.dataT
-  
-    const {
-      getTableProps,
-      getTableBodyProps,
-      headerGroups,
-      rows,
-      prepareRow,
-    } = useTable({ columns, data })
-  
-    return (
-      <table class='table' {...getTableProps()} style={{ border: 'solid 1px blue' }}>
-        <thead>
-          {headerGroups.map(headerGroup => (
-            <tr {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map(column => (
-                <th
-                  {...column.getHeaderProps()}
-                  style={{
-                    border: 'solid 1px blue',
-                    borderBottom: 'solid 2px red',
-                    background: 'aliceblue',
-                    color: 'black',
-                    fontWeight: 'bold',
-                    
-                  }}
-                >
-                  {column.render('Header')}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {rows.map(row => {
-            prepareRow(row)
-            return (
-              <tr {...row.getRowProps()}>
-                {row.cells.map(cell => {
-                  return (
-                    <td
-                      {...cell.getCellProps()}
-                      style={{
-                        padding: '10px',
-                        border: 'solid 1px gray',
-                        background: 'papayawhip',
-                      }}
-                    >
-                      {cell.render('Cell')}
-                    </td>
-                  )
-                })}
-              </tr>
-            )
-          })}
-        </tbody>
-      </table>
-    )
-  }
   
   let Summaries = (props) => {
     let date = props.dateRange
@@ -291,46 +154,7 @@ let measureProductivity = (records) => {
     );
   }
 
-  let Productivity = (props) => {
-    let columnsData = [
-      {
-        Header: 'Productive',
-        accessor: 'productive', // accessor is the "key" in the data
-      },
-      {
-        Header: 'Neutral',
-        accessor: 'neutral',
-      },
-      {
-        Header: 'Destructive',
-        accessor: 'destructive',
-      },
-    ]
-
-    let productivityPercentage = {
-      productive: roundTo1Decimals((productivity.counter.productive)/props.totalRecorded*100)+'%',
-      neutral: roundTo1Decimals((productivity.counter.neutral)/props.totalRecorded*100) + '%',
-      destructive: roundTo1Decimals((productivity.counter.destructive)/props.totalRecorded*100) + '%',  
-    }
-    // let data = [productivity.counter, productivityPercentage]
-    let data = [productivity.counter]
-    return (
-      <div class = 'column'> 
-          <p> Productivity</p>
-          <ViewButtons type='productivity'/>
-          <TableData columnsT={columnsData} dataT={data}/>
-          <p> Total Hours: {props.totalRecorded}</p>
-
-      </div>
-      
-
-    )
-  }
-
-
-
-
-//
+ //
 
 
 

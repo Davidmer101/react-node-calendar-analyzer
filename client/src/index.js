@@ -8,6 +8,7 @@ import Home from "./pages/Home";
 import Blogs from "./pages/Blogs";
 import Daily from "./pages/Daily";
 import Weekly from "./pages/Weekly";
+import Monthly from "./pages/Monthly.js";
 import Contact from "./pages/Contact";
 import Nav from "./pages/Nav";
 import 'bulma/css/bulma.min.css';
@@ -37,6 +38,9 @@ function Index () {
         </Route>
         <Route path="/weekly">
           <Weekly weekNum = {myDate.weekNumber(new Date())}/>
+        </Route>
+        <Route path="/monthly">
+          <Monthly />
         </Route>
       </Switch>
     </Router>

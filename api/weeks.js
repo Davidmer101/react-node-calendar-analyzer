@@ -19,7 +19,6 @@ const db = new sqlite3.Database(process.env.TEST_DATABASE || './db.sqlite')
 // })
 
 weeksRouter.get('/', (req, res, next) => {
-    console.log('HELLLOW ')
     const sql = `SELECT calName, weekNum , SUM(duration) as totalHours FROM Records 
                 GROUP BY calName, weekNum
                 ORDER BY weekNum, calName
@@ -50,12 +49,11 @@ weeksRouter.get('/', (req, res, next) => {
 }) 
 
 weeksRouter.get('/:weekId', (req, res, next) => {
-    console.log('HELLLO ')
   
     let type = 'calName'
     let weekNum = req.params.weekId
     const sql =`SELECT ${type} , sum(duration) as totalHours, id 
-                FROM Records
+                FROM (SELECT DISTINCT * FROM Records)
                 WHERE weekNum = ${weekNum} 
                 GROUP BY calName
                 ORDER BY totalHours DESC `
@@ -79,7 +77,6 @@ weeksRouter.post('/', (req, res, next) => {
     const cal3 = req.body.week.cal3;
     const cal4 = req.body.week.cal4;
     const cal5 = req.body.week.cal5;
-    console.log('from week post:' + JSON.stringify(req.session));
     // const username = req.session.user;
     // if(!id || !username) {
     //     return res.status(200).json({username: username});

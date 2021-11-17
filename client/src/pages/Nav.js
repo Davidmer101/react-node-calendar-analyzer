@@ -1,7 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import 'bulma/css/bulma.min.css';
-
+import * as myRequestAndStore from '../requestAndStore.js'
 
 function Nav() {
     return(
@@ -31,6 +31,7 @@ function Nav() {
                     <Link to="/daily" class="navbar-item" > Daily </Link>
                     <Link to="/weekly" class="navbar-item"> Weekly </Link>
                     <Link to="/monthly" class="navbar-item"> Monthly </Link> 
+                    <Link to="/custom" class="navbar-item"> Custom </Link> 
 
                     
                 </div>
@@ -39,6 +40,7 @@ function Nav() {
                 <div class="navbar-item has-dropdown is-hoverable">
                     <Link to="/more" class="navbar-item"> More </Link>
                         <div class="navbar-dropdown">
+                            <button onClick={() => myRequestAndStore.listOfCalendars()}> Refresh </button>
                             <a class="navbar-item">
                                 About
                             </a>

@@ -44,8 +44,23 @@ class App extends React.Component {
 
   updateSignInStatus(signedIn) {
     if (signedIn) {
-      alert('signIn Confirmed')
-      myRequestAndStore.listOfCalendars()
+      //end of this month  ex: Nov 31
+      let dayAhead = new Date();
+      dayAhead.setMonth(dayAhead.getMonth() + 1);
+      dayAhead.setDate(0)
+
+      //Aug Sep Oct Nov
+      //three months ago Sept 1
+      let dayBehind = new Date();
+      dayBehind.setMonth(dayBehind.getMonth() - 2);
+      dayBehind.setDate(1)
+
+      alert(dayBehind.toLocaleDateString())
+      alert(dayAhead.toLocaleDateString())
+
+      myRequestAndStore.listOfCalendars(dayBehind, dayAhead)
+
+
     }
   }
 

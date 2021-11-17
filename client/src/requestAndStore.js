@@ -7,25 +7,14 @@ let eventList = [];
 let gapi = window.gapi; 
 let numberOfEvents = 0
 
-   export async function listOfCalendars() {
+   export async function listOfCalendars(dayBehind, dayAhead) {
     try {
       let response = await gapi.client.calendar.calendarList.list({});
       let calendars = response.result.items;
       for(let i = 0; i< calendars.length; i++) {
           let calendar = calendars[i];
           calendarList.push(calendar.summary)
-          //end of this month 
-          let dayAhead = new Date();
-          dayAhead.setMonth(dayAhead.getMonth() + 1);
-          dayAhead.setDate(0)
-          
-          //
-          let dayBehind = new Date();
-          dayBehind.setMonth(dayBehind.getMonth() - 2);
-          dayBehind.setDate(0)
-         
           // let dayBehind = myDate.updateDate(new Date(), -35);
-
           events('day', calendar.summary, calendar.id, dayBehind.toISOString(), dayAhead.toISOString());
           
         }

@@ -40,7 +40,7 @@ function Index () {
           <Weekly weekNum = {myDate.weekNumber(new Date())}/>
         </Route>
         <Route path="/monthly">
-          <Monthly />
+          <Monthly monthNum = {(new Date()).getMonth()} />
         </Route>
       </Switch>
     </Router>

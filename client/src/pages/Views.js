@@ -162,11 +162,34 @@ function  ViewButtons (props) {
           <p> Productivity</p>
           <ViewButtons type='productivity'/>
           <TableData columnsT={columnsData} dataT={data}/>
-          <p> Total Hours: {totalRecorded}</p>
+           <div class= 'column'>
+            <strong> Total Hours Recorded: </strong> {totalRecorded}
+          </div>
 
       </div>
 
     )
+  }
+
+  let TextData = (props) => {
+
+    return(
+      <>
+            <div class= 'column'> 
+              <strong> Productive: </strong>  {props.data.productive}
+            </div>
+
+            <div class= 'column'> 
+              <strong> Neutral: </strong>  {props.data.neutral}
+            </div>
+
+            <div class= 'column'> 
+              <strong> Destructive: </strong>  {props.data.destructive}
+            </div>
+      </>
+      )
+            
+          
   }
 
   let measureProductivity = (records) => {

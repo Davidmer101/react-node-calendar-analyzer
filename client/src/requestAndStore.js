@@ -14,9 +14,20 @@ let numberOfEvents = 0
       for(let i = 0; i< calendars.length; i++) {
           let calendar = calendars[i];
           calendarList.push(calendar.summary)
-          let dayAhead = myDate.updateDate(new Date(), 7);
-          let dayBehind = myDate.updateDate(new Date(), -35);
+          //end of this month 
+          let dayAhead = new Date();
+          dayAhead.setMonth(dayAhead.getMonth() + 1);
+          dayAhead.setDate(1)
+          
+          //
+          let dayBehind = new Date();
+          dayBehind.setMonth(dayBehind.getMonth() - 2);
+          dayBehind.setDate(0)
+         
+          // let dayBehind = myDate.updateDate(new Date(), -35);
+
           events('day', calendar.summary, calendar.id, dayBehind.toISOString(), dayAhead.toISOString());
+          
         }
     } catch (error) {
       alert('error in requestAndStore-> listOfCalendars ' + error.message);
@@ -56,6 +67,7 @@ let numberOfEvents = 0
   let requestUpTo = new Date(maxDate);
   // console.log('sleep requesting from: ' + requestFrom + ' upto ' + requestUpTo);
   events.forEach((event) => {
+
       numberOfEvents++;
       console.log('num of events is: '+ numberOfEvents)
     //  console.log(event.summary + ':' + new Date(event.start.dateTime).toLocaleString() + ':' + new Date(event.end.dateTime).toLocaleString() + ':' + calName + ':' + 3 + ':' + 3)

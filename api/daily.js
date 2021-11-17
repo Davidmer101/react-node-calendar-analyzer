@@ -49,7 +49,7 @@ daysRouter.get('/:dayId', (req, res, next) => {
     let day = req.params.dayId
 
     const sql =`SELECT ${type} , sum(duration) as totalHours, id 
-                FROM (SELECT DISTINCT id, calName, duration FROM Records)
+                FROM (SELECT DISTINCT id, calName, startTime, duration FROM Records)
                 WHERE id = "${day}" 
                 GROUP BY calName
                 ORDER BY totalHours DESC `

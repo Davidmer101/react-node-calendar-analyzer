@@ -17,7 +17,7 @@ let numberOfEvents = 0
           //end of this month 
           let dayAhead = new Date();
           dayAhead.setMonth(dayAhead.getMonth() + 1);
-          dayAhead.setDate(1)
+          dayAhead.setDate(0)
           
           //
           let dayBehind = new Date();

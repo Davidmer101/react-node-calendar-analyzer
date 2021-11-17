@@ -11,7 +11,6 @@ import { Calendar } from "react-modern-calendar-datepicker";
       let [weekNum, setWeekNum] = useState(props.weekNum)
       let requestData =  useFetch(`/api/weekly/${weekNum}`)
       let data= null
-      let totalRecorded = 0
       let dateRange =  {weekStartsOn: new Date('Sun Oct 31 2021'), weekEndsOn: new Date('Sat Nov 5 2021')}
       if(requestData) {
         data = requestData.records

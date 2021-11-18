@@ -153,4 +153,37 @@ let date = new Date(input)
 let givenWeek = oneWeek(date)
 console.log(givenWeek.weekStartsOn.toDateString() + ' ' + givenWeek.weekEndsOn.toDateString())
 
-export {updateDate, timeZone, timeBetween, weekNumber, oneWeek}
+/**
+ * gives first and last day of months starting on the current month
+ * @params {}
+ */
+function edgeDaysOfEachMonth () {
+  //end of this month  ex: Nov 30
+  let endOfCurrentMonth = adjustMonthDate(1, 0)
+  //Aug Sep Oct Nov
+  //three months ago Sept 1
+  let startOfThreeMonthsAgo = adjustMonthDate(-2, 1);
+  let startOfSixMonthsAgo = adjustMonthDate(-5, 1)
+  let startOfNineMonthsAgo = adjustMonthDate(-8, 1)
+  let startOfTwelveMonthsAgo = adjustMonthDate(-11, 1)
+//   let aYearAgo = new Date((new Date()).setYear(2020))
+  let aYearAgo = adjustMonthDate(-12, (new Date).getDate())
+
+  return {endOfCurrentMonth: endOfCurrentMonth, startOfThreeMonthsAgo: startOfThreeMonthsAgo, startOfSixMonthsAgo, startOfNineMonthsAgo:startOfNineMonthsAgo, startOfTwelveMonthsAgo: startOfTwelveMonthsAgo, aYearAgo: aYearAgo}
+}
+
+/**
+ * gives the last date or first date of a month found by shifting in the params
+ * @param {number} shiftMonth  how much to shift month from current month
+ * @param {number} day what date to set it
+ * @returns 
+ */
+function adjustMonthDate(shiftMonth, day) {
+    let date = new Date();
+    date.setMonth(date.getMonth() + shiftMonth);
+    date.setDate(day)
+
+    return date
+}
+
+export {updateDate, timeZone, timeBetween, weekNumber, oneWeek, edgeDaysOfEachMonth}

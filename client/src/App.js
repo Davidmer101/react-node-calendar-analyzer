@@ -4,6 +4,7 @@ import './App.css';
 import * as myRequestAndStore from './requestAndStore.js'
 import axios from 'axios';
 import RequestMyServer from './requestMyServer.js';
+import * as myDate from './date.js';
 
 
   let gapi = window.gapi
@@ -47,21 +48,28 @@ import RequestMyServer from './requestMyServer.js';
    */
     function updateSigninStatus(signedIn) {
     if (signedIn) {
-      alert ('signing you in \n change page view to summary or daily')
-      //end of this month  ex: Nov 31
-      let dayAhead = new Date();
-      dayAhead.setMonth(dayAhead.getMonth() + 1);
-      dayAhead.setDate(0)
+      let date = myDate.edgeDaysOfEachMonth()
+      myRequestAndStore.listOfCalendars(date.startOfThreeMonthsAgo, date.endOfCurrentMonth)
+      
+      setTimeout(() => {
+        myRequestAndStore.listOfCalendars(date.startOfSixMonthsAgo, date.startOfThreeMonthsAgo)
+      }, 5000);
 
-      //Aug Sep Oct Nov
-      //three months ago Sept 1
-      let dayBehind = new Date();
-      dayBehind.setMonth(dayBehind.getMonth() - 2);
-      dayBehind.setDate(1)
+      setTimeout(() => {
+        myRequestAndStore.listOfCalendars(date.startOfNineMonthsAgo, date.startOfSixMonthsAgo)
+      }, 15000);
 
-      myRequestAndStore.listOfCalendars(dayBehind, dayAhead)
-
-
+      setTimeout(() => {
+        myRequestAndStore.listOfCalendars(date.startOfTwelveMonthsAgo, date.startOfNineMonthsAgo)
+        alert(
+          `today is ${(new Date()).toDateString()} \n
+          end of this month is: ${date.endOfCurrentMonth.toDateString()}  \n
+          three months ago it was: ${date.startOfThreeMonthsAgo.toDateString()}  \n
+          six months ago it was: ${date.startOfSixMonthsAgo.toDateString()}  \n
+          nine months ago it was: ${date.startOfNineMonthsAgo.toDateString()} \n
+          twelve months ago it was: ${date.startOfTwelveMonthsAgo.toDateString()}`
+        )
+      }, 25000);
     } else {
       alert("signing you out \n change view to home page")
     }

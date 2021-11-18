@@ -11,6 +11,6 @@ apiRouter.use('/daily', daysRouter);
 apiRouter.use('/monthly', monthsRouter);
 
 apiRouter.get('/', (req, res, next) => {
-    res.status(200).json({message: "Hello from server"})
+    res.status(200).json({message: "Server is Ready and"})
 })
 // module.exports = apiRouter;

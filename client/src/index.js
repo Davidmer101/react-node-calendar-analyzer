@@ -11,15 +11,17 @@ import Weekly from "./pages/Weekly";
 import Monthly from "./pages/Monthly.js";
 import Contact from "./pages/Contact";
 import Nav from "./pages/Nav";
+import Custom from "./pages/Custom.js"
 import 'bulma/css/bulma.min.css';
 import * as myDate from './date.js';
+import * as myApp from './App.js';
 
 
 function Index () {
   //don't forget App
   return (
     <Router>
-      <Nav/>      
+      <Nav onSignout = {myApp.handleSignoutClick}/>      
       <Switch>
         <Route exact path="/">
           <Home />
@@ -41,6 +43,9 @@ function Index () {
         </Route>
         <Route path="/monthly">
           <Monthly monthNum = {(new Date()).getMonth()} />
+        </Route>
+        <Route path="/custom">
+          <Custom/>
         </Route>
       </Switch>
     </Router>

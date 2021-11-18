@@ -1,7 +1,7 @@
 import axios from 'axios';
 import * as myDate from './date.js';
 
-let starterURL = 'http://localhost:5000/' 
+export let starterURL = 'http://localhost:5000/' 
 let calendarList = [];
 let eventList = [];
 let gapi = window.gapi; 
@@ -14,7 +14,6 @@ let numberOfEvents = 0
       for(let i = 0; i< calendars.length; i++) {
           let calendar = calendars[i];
           calendarList.push(calendar.summary)
-          // let dayBehind = myDate.updateDate(new Date(), -35);
           events('day', calendar.summary, calendar.id, dayBehind.toISOString(), dayAhead.toISOString());
           
         }

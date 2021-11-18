@@ -1,13 +1,10 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import 'bulma/css/bulma.min.css';
-import * as myRequestAndStore from '../requestAndStore.js'
 
-function Nav() {
+function NavBarSymbols () {
     return(
-        
-        <nav class="navbar is-light" role="navigation" aria-label="main navigation">
-            <div class="navbar-brand">
+        <div class="navbar-brand">
                 <Link to="/" class="navbar-item" > 
                 {/* <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28"></img> */}
                     
@@ -25,22 +22,26 @@ function Nav() {
                 <span aria-hidden="true"></span>
                 </a>
             </div>
+    )
+}
 
-            <div id="navbarBasicExample" class="navbar-menu"> 
-                <div class="navbar-start">
-                    <Link to="/daily" class="navbar-item" > Daily </Link>
-                    <Link to="/weekly" class="navbar-item"> Weekly </Link>
-                    <Link to="/monthly" class="navbar-item"> Monthly </Link> 
-                    <Link to="/custom" class="navbar-item"> Custom </Link> 
+function LeftNavBarChocies() {
+    return (
+        <div id="left-navbar-choices" class="navbar-start">
+            <Link to="/daily" class="navbar-item" > Daily </Link>
+            <Link to="/weekly" class="navbar-item"> Weekly </Link>
+            <Link to="/monthly" class="navbar-item"> Monthly </Link> 
+            <Link to="/custom" class="navbar-item"> Custom </Link> 
+        </div>
+    )
+}
 
-                    
-                </div>
-
-                <div class="navbar-end">
-                <div class="navbar-item has-dropdown is-hoverable">
-                    <Link to="/more" class="navbar-item"> More </Link>
+function RightNavBarChocies (props) {
+    return (
+        <div class="navbar-end" id="right-navbar-choices" >
+                    <div class="navbar-item has-dropdown is-hoverable">
+                        <Link to="/more" class="navbar-item"> More </Link>
                         <div class="navbar-dropdown">
-                            <button onClick={() => myRequestAndStore.listOfCalendars()}> Refresh </button>
                             <a class="navbar-item">
                                 About
                             </a>
@@ -52,22 +53,28 @@ function Nav() {
                             </a>
                         </div>
                     </div>
+
                     <div class="navbar-item">
-                        <div class="buttons">
-                            <a class="button is-primary">
-                                <strong>Sign up</strong>
-                            </a>
-                            <a class="button is-light">
-                                Log in
-                            </a>
+                        <div  class="buttons"  >
+                            <button onClick = {props.onSignout} id='signout-button' class="button is-primary">
+                                Sign Out
+                            </button>
                         </div>
                     </div>
                 </div>
+    )
+}
 
+function Nav(props) {
+    return(
+        <nav class="navbar is-light" role="navigation" aria-label="main navigation">
+            <NavBarSymbols />
+            <div  class="navbar-menu"> 
+                < LeftNavBarChocies />
+                < RightNavBarChocies onSignout = {props.onSignout} />
             </div>  
         </nav>
     )
-    
 }
 
 //navebar burger and navebar menu toggle is-active when pressed

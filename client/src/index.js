@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter as Router, Switch, Route} from "react-router-dom";
+import { BrowserRouter , Routes, Route} from "react-router-dom";
 import Home from "./pages/Home";
 import Blogs from "./pages/Blogs";
 import Daily from "./pages/Daily";
@@ -20,35 +20,26 @@ import * as myApp from './App.js';
 function Index () {
   //don't forget App
   return (
-    <Router>
-      <Nav onSignout = {myApp.handleSignoutClick}/>      
-      <Switch>
-        <Route exact path="/">
-          <Home />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Nav onSignout = {myApp.handleSignoutClick}/>} >
+          <Route path="/home" element={<Home />} />
+          <Route path="/blogs" element={<Blogs/>} />
+          <Route path="/contact" element={<Contact/>} />
+          <Route path="/app" element={<App/>} />
+          <Route path="/daily" element={<Daily day={new Date()}/>} />
+          <Route path="/weekly" element={<Weekly weekNum = {myDate.weekNumber(new Date())}/>} />
+          <Route path="/monthly" element={ <Monthly monthNum = {(new Date()).getMonth()} />} />
+          <Route path="/custom" element={<Custom/>} />
         </Route>
-        <Route path="/blogs">
-          <Blogs/>
-        </Route>
-        <Route path="/contact">
-          <Contact/>
-        </Route>
-        <Route path="/app">
-          <App/>
-        </Route>
-        <Route path="/daily">
-          <Daily day={new Date()}/>
-        </Route>
-        <Route path="/weekly">
-          <Weekly weekNum = {myDate.weekNumber(new Date())}/>
-        </Route>
-        <Route path="/monthly">
-          <Monthly monthNum = {(new Date()).getMonth()} />
-        </Route>
-        <Route path="/custom">
-          <Custom/>
-        </Route>
-      </Switch>
-    </Router>
+      </Routes>
+    </BrowserRouter>
+          
+    
+        
+        
+ 
+   
 
   
   )

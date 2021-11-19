@@ -1,6 +1,7 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
+import {Link, Outlet} from 'react-router-dom';
 import 'bulma/css/bulma.min.css';
+import isSignedIn from "../App.js";
 
 function NavBarSymbols () {
     return(
@@ -66,14 +67,23 @@ function RightNavBarChocies (props) {
 }
 
 function Nav(props) {
+    if(isSignedIn) {
+        alert('nav says signed In')
+    } else {
+        alert('nav says not signed in')
+    }
     return(
-        <nav class="navbar is-light" role="navigation" aria-label="main navigation">
-            <NavBarSymbols />
-            <div  class="navbar-menu"> 
-                < LeftNavBarChocies />
-                < RightNavBarChocies onSignout = {props.onSignout} />
-            </div>  
-        </nav>
+        <>
+            <nav class="navbar is-light" role="navigation" aria-label="main navigation">
+                <NavBarSymbols />
+                <div  class="navbar-menu"> 
+                    < LeftNavBarChocies />
+                    < RightNavBarChocies onSignout = {props.onSignout} />
+                </div>  
+            </nav>
+
+            <Outlet />
+        </>
     )
 }
 

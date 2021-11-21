@@ -29,7 +29,7 @@ function NavBarSymbols () {
 function LeftNavBarChocies() {
     return (
         <div id="left-navbar-choices" class="navbar-start">
-            <Link to="/daily" class="navbar-item" > Daily </Link>
+            <Link to={`/daily/calName/all/${new Date().toDateString()}`} key={'period'} class="navbar-item" > Daily </Link>
             <Link to="/weekly" class="navbar-item"> Weekly </Link>
             <Link to="/monthly" class="navbar-item"> Monthly </Link> 
             <Link to="/custom" class="navbar-item"> Custom </Link> 

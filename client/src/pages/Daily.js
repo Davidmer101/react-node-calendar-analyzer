@@ -1,7 +1,7 @@
 import useFetch from "../useFetch";
 import '../App.css'
 import * as myDate from '../date.js';
-import {Link, Outlet} from 'react-router-dom'
+import {Link, Outlet, useParams} from 'react-router-dom'
 // copied from weekly.js
 import React, {useState} from "react"
 import { useTable } from 'react-table'
@@ -12,6 +12,8 @@ import {CalendarView, Productivity} from './Views.js';
 import CalName from './CalName.js'
 
   let Daily = (props) => {
+      let params = useParams();
+      alert('daily params is: ' + JSON.stringify(params));
       let [day, setDay] = useState(props.day)
       let requestData =  useFetch(`/api/daily/${day.toDateString()}`)
       let data= null
@@ -62,7 +64,7 @@ import CalName from './CalName.js'
 function addLink (calData) {
   let calLinked = 
       <Link 
-        to = {`/daily/calendar?calName=${calData.calName}&dateRange=${calData.id}`}
+        to = {`./caliendar?calName=${calData.calName}&dateRange=${calData.id}`}
         key={calData.calName}
       >
         {calData.calName}

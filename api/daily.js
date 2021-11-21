@@ -1,7 +1,10 @@
 import express from 'express';
 export const daysRouter = express.Router();
 import sqlite3 from 'sqlite3';
+import {calendarRouter} from './calendar.js'
 const db = new sqlite3.Database(process.env.TEST_DATABASE || './db.sqlite')
+
+daysRouter.use('/calendar', calendarRouter);
 
 daysRouter.param('weekId', (req, res, next, weekId) => { // check if Id exits (simplifying)
     const sql = 'SELECT * FROM Weeks WHERE Weeks.id = $weekId ';

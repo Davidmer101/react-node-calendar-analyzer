@@ -1,9 +1,11 @@
 import {useState, useEffect} from "react";
+let proxy = "http://localhost:5000";
 
 function useFetch (url) {
-    let [data, setData] = useState(null, url);
+    // alert('url in useFetch is: ' + proxy + '' + url)
+    let [data, setData] = useState(null);
     useEffect(() => {
-        fetch(url)
+        fetch((proxy+ '' + url))
             .then((res) => res.json())
             .then((data) => setData(data))
     }, [url])

@@ -1,7 +1,7 @@
 import useFetch from "../useFetch";
 import '../App.css'
 import * as myDate from '../date.js';
-
+import {Link, Outlet} from 'react-router-dom'
 // copied from weekly.js
 import React, {useState} from "react"
 import { useTable } from 'react-table'
@@ -9,18 +9,21 @@ import "react-modern-calendar-datepicker/lib/DatePicker.css";
 import DatePicker from "react-modern-calendar-datepicker";
 import { Calendar } from "react-modern-calendar-datepicker";
 import {CalendarView, Productivity} from './Views.js';
+import CalName from './CalName.js'
 
   let Daily = (props) => {
       let [day, setDay] = useState(props.day)
       let requestData =  useFetch(`/api/daily/${day.toDateString()}`)
       let data= null
+      let dataMapped = null
       let dateRange = day
       if(requestData) {
         data = requestData.records
+        dataMapped = data.map(addLink)
         if (data.length > 0) {
           dateRange = new Date(data[0].id)
         }
-        
+      
       } else {
         // alert('no data stored for this day')
         dateRange =  day
@@ -42,10 +45,13 @@ import {CalendarView, Productivity} from './Views.js';
           setDay(date)
         }
       }
-
+      // alert('data is: ' + JSON.stringify(data) + "\n dataMapped is: " + JSON.stringify(dataMapped))
       return(
           <div class = 'columns'>
-            <CalendarView dataC={data}/>
+            <CalendarView dataC={dataMapped}/>
+            <div class='column'>
+              <Outlet />
+            </div>
             <Summaries onClick = {e => adjustDay(e)} dateRange = {dateRange} />
             <Productivity data = {data}/>
           </div>
@@ -53,6 +59,19 @@ import {CalendarView, Productivity} from './Views.js';
   }
 // {/* <h2 >{requested.date.slice(11)}</h2> */}
 
+function addLink (calData) {
+  let calLinked = 
+      <Link 
+        to = {`/daily/calendar?calName=${calData.calName}&dateRange=${calData.id}`}
+        key={calData.calName}
+      >
+        {calData.calName}
+      </Link>
+  return {
+    calName: calLinked,
+    totalHours: calData.totalHours
+  }
+}
  
   function  ViewButtons (props) {
     return(

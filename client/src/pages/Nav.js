@@ -1,5 +1,5 @@
 import React from 'react';
-import {Link, Outlet} from 'react-router-dom';
+import { Outlet, Link } from 'react-router-dom';
 import 'bulma/css/bulma.min.css';
 import isSignedIn from "../App.js";
 
@@ -67,11 +67,11 @@ function RightNavBarChocies (props) {
 }
 
 function Nav(props) {
-    if(isSignedIn) {
-        alert('nav says signed In')
-    } else {
-        alert('nav says not signed in')
-    }
+    // if(isSignedIn) {
+    //     alert('nav says signed In')
+    // } else {
+    //     alert('nav says not signed in')
+    // }
     return(
         <>
             <nav class="navbar is-light" role="navigation" aria-label="main navigation">

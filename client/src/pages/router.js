@@ -1,5 +1,5 @@
 import {useState} from 'react'
-import {Link, Outlet, useParams} from 'react-router-dom'
+import {Link, Outlet, useParams, useNavigate} from 'react-router-dom'
 import useFetch from '../useFetch'
 import Daily from './Daily.js'
 import {CalendarView, Productivity} from './Views.js';
@@ -8,6 +8,7 @@ import { Calendar } from "react-modern-calendar-datepicker";
 
 export default function Router () {
     let params = useParams()
+    let navigate = useNavigate()
     let period = params.period //daily, weekly, monthly, custom
     let type = params.type //calName, eventName
     let specific = params.specific //all, specific calendar
@@ -22,18 +23,22 @@ export default function Router () {
     }
     
     let adjustPeriod = (e) => {
-        alert('coming soon')
         if(e.target && e.target.id) {
           if (e.target.id == 'right-arrow') {
             let dayUpdated = myDate.updateDate(new Date(date), 1)
+            date = dayUpdated.toDateString()
+            navigate(`/${period}/${type}/${specific}/${date}`)
             // setDay(dayUpdated)
           } else if (e.target.id == 'left-arrow') {
             let dayUpdated = myDate.updateDate(new Date(date), -1)
+            date = dayUpdated.toDateString()
+            navigate(`/${period}/${type}/${specific}/${date}`)
             // setDay(dayUpdated)
          }
         } else {
           //make date
-          let date =  new Date(`${e.year}, ${e.month}, ${e.day}`)
+          date =  new Date(`${e.year}, ${e.month}, ${e.day}`)
+          navigate(`/${period}/${type}/${specific}/${date.toDateString()}`)
           // update date
         //   setDay(date)
         }

@@ -3,7 +3,7 @@ import '../App.css'
 import React, {useState} from "react"
 import * as myDate from '../date.js';
 import "react-modern-calendar-datepicker/lib/DatePicker.css";
-import {CalendarView, Productivity} from './Views.js';
+import {TableView, Productivity} from './Views.js';
 import { Calendar } from "react-modern-calendar-datepicker";
 
 
@@ -41,8 +41,8 @@ import { Calendar } from "react-modern-calendar-datepicker";
       return(
         <>
               <div class = 'columns'>
-                <CalendarView dataC={data}/>
-                <Summaries onClick = {e => adjustWeek(e)} dateRange = {dateRange} />
+                {/* <TableView dataC={data}/> */}
+                <WeeklyCalendarView onClick = {e => adjustWeek(e)} dateRange = {dateRange} />
                 <Productivity data = {data}/>
               </div>
               <div class ='column'>
@@ -77,7 +77,7 @@ import { Calendar } from "react-modern-calendar-datepicker";
   }
 // {/* <h2 >{requested.date.slice(11)}</h2> */}
 
-export let Summaries = (props) => {
+export let WeeklyCalendarView = (props) => {
   let date = new Date(props.dateRange.weekEndsOn)
   let weekNumber = myDate.weekNumber(date)
   let currentWeek = myDate.weekNumber(new Date())
@@ -92,7 +92,7 @@ export let Summaries = (props) => {
   let options = {weekday: "short",  month: "short", day: "numeric", year: "numeric"}
   return (
     <div class = 'column is-centered'>
-      <h2>  Your week {weekNumber} summary </h2>
+      <h1>  Your week {weekNumber} summary </h1>
       <DateRangeView 
         dateRange={props.dateRange} 
         onClick={props.onClick}

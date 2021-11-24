@@ -1,162 +1,134 @@
 import {useState} from 'react'
-import {Link, Outlet, useParams, useNavigate} from 'react-router-dom'
+import {NavLink, Outlet, useParams, useNavigate} from 'react-router-dom'
 import useFetch from '../useFetch'
 import Daily from './Daily.js'
-import {CalendarView, Productivity} from './Views.js';
+import {TableView, Productivity} from './Views.js';
 import * as myDate from '../date.js'
 import { Calendar } from "react-modern-calendar-datepicker";
-
+import{ DailyCalendarView} from './Daily.js'
+import {WeeklyCalendarView} from './Weekly.js'
+import {MonthlyCalendarView} from './Monthly.js'
+import Loader from './Loader.js'
 export default function Router () {
+    let weekRange = {weekStartsOn: new Date('Sun Oct 31 2021'), weekEndsOn: new Date('Sat Nov 5 2021')}
+    let dateInMonth = new Date()
     let params = useParams()
     let navigate = useNavigate()
-    let period = params.period //daily, weekly, monthly, custom
-    let type = params.type //calName, eventName
-    let specific = params.specific //all, specific calendar
-    let date = params.date //date, week number, month number, could be range of days
-    let url = `/api/${period}/${date}?type:${type}&specific=${specific}&date=${date}`
+    let {period, type, specific, date, detail} = params // period=daily/weekly/monthly/custom, type=calName/eventName specific=all/{calName}, date=date/weekNum/monthNum/customDates
+    let url = `/api/${period}/${type}/${specific}/${date}/none`
+    // alert('in router before requesting data: ')
     let data = useFetch(url)
-    
+    if(!data || !(data.records)) {
+      return <Loader /> 
+    }
+    // alert(' in router after requesting data, data is: ' + JSON.stringify(data))
     let dataLinkAdded 
     if(data) {
         data = data.records
-        dataLinkAdded = data.map(addLink)
+        if(data) {
+          dataLinkAdded = data.map(addLink)
+          if(period == 'weekly') {
+            weekRange = myDate.oneWeek(data[0].id)
+         } else if (period == 'monthly') {
+           dateInMonth = new Date(data[0].id)
+         }
+ 
+        }
+        
     }
-    
     let adjustPeriod = (e) => {
         if(e.target && e.target.id) {
-          if (e.target.id == 'right-arrow') {
-            let dayUpdated = myDate.updateDate(new Date(date), 1)
-            date = dayUpdated.toDateString()
+            if (e.target.id == 'right-arrow') {
+              switch (period) {
+                case 'daily':
+                  let dayUpdated = myDate.updateDate(new Date(date), 1)
+                  date = dayUpdated.toDateString()
+                  break;
+                case 'weekly':
+                  date = parseInt(date) + 1
+                  break;
+                case 'monthly':
+                  date = parseInt(date) + 1
+                  dateInMonth.setMonth(dateInMonth.getMonth() + 1)
+                  break;
+                default:
+                  break;
+              }
+            } else if (e.target.id == 'left-arrow') {
+              switch (period) {
+                case 'daily':
+                  let dayUpdated = myDate.updateDate(new Date(date), -1)
+                  date = dayUpdated.toDateString()
+                  break;
+                case 'weekly':
+                  date = parseInt(date) - 1
+                  break;
+                case 'monthly':
+                  date = parseInt(date) - 1
+                  dateInMonth.setMonth(dateInMonth.getMonth() - 1)
+                  break;
+                default:
+                  break;
+              }
+            }
             navigate(`/${period}/${type}/${specific}/${date}`)
-            // setDay(dayUpdated)
-          } else if (e.target.id == 'left-arrow') {
-            let dayUpdated = myDate.updateDate(new Date(date), -1)
-            date = dayUpdated.toDateString()
-            navigate(`/${period}/${type}/${specific}/${date}`)
-            // setDay(dayUpdated)
-         }
         } else {
-          //make date
-          date =  new Date(`${e.year}, ${e.month}, ${e.day}`)
-          navigate(`/${period}/${type}/${specific}/${date.toDateString()}`)
-          // update date
-        //   setDay(date)
+            switch (period) {
+              case 'daily':
+                date =  new Date(`${e.year}, ${e.month}, ${e.day}`)
+                navigate(`/${period}/${type}/${specific}/${date.toDateString()}`)
+                break;
+              case 'weekly':
+                date = new Date(`${e.from.year}, ${e.from.month}, ${e.from.day}`)
+                let weekNum = myDate.weekNumber(date)
+                navigate(`/${period}/${type}/${specific}/${weekNum}`)
+                break;
+              case 'monthly':
+                dateInMonth = new Date(`${e.from.year}, ${e.from.month}, ${e.from.day}`)
+                let monthNum = dateInMonth.getMonth()
+                navigate(`/${period}/${type}/${specific}/${monthNum}`)
+                break;
+              default:
+                break;
+        }
+        
         }
       }
 
 
+
     return (
         <>
-          <div class = 'columns'>
-            <CalendarView dataC={dataLinkAdded}/>
+          <div class = 'columns' style={{'margin-top': 'auto', 'border-top': '1px solid gray'}}> 
+            
+            {period == 'daily' && <DailyCalendarView onClick = {e => adjustPeriod(e)} dateRange = {new Date(date)} /> }
+            {period == 'weekly' && <WeeklyCalendarView onClick = {e => adjustPeriod(e)} dateRange = {weekRange} />}
+            {period == 'monthly' && <MonthlyCalendarView onClick = {e => adjustPeriod(e)} dateRange = {dateInMonth} />}
+            {dataLinkAdded && <TableView dataC={dataLinkAdded} type={type} onClick = {e => adjustPeriod(e)} dateRange = {new Date(date)}/>}
               <Outlet />
-            <Summaries onClick = {e => adjustPeriod(e)} dateRange = {new Date(date)} />
-            <Productivity data = {data}/>
-          </div>
-         <p> params is {JSON.stringify(params)} </p>
-         <p>type is: {type} </p>
-         <p> specific is: {specific} </p>
-         <p> url sent is {url} </p>
-         <br/>
-         <p>data requested is: </p> 
-         <p> {JSON.stringify(data)}</p>
-        
+            <Productivity data = {data} show={detail ? 'text': 'table' } />
+          </div>       
         </>
         )
 }
 
 function addLink (calData) {
     let calLinked = 
-        <Link 
+        <NavLink 
+          style={({isActive})=>{
+            return {
+              color: isActive ? "red" : ""
+            };
+          }}
           to = {`./${calData.calName}`}
           key={calData.calName}
         >
           {calData.calName}
-        </Link>
+        </NavLink>
     return {
       calName: calLinked,
       totalHours: calData.totalHours
     }
   }
 
-  let Summaries = (props) => {
-    let date = props.dateRange
-    let info = ''
-    if(date.getDate() == (myDate.updateDate((new Date()), - 1)).getDate()) {
-      // alert('yesterday')
-      info = 'yesterday'
-    } else if(date.getDate() == (new Date()).getDate() ){
-      // alert('today')
-      info = `today`
-    } else if (date.getDate() == (myDate.updateDate((new Date()), 1)).getDate()) {
-      info = `tomorrow`
-    }
-    let options = {weekday: "short",  month: "short", day: "numeric", year: "numeric"}
-    return (
-      <div class = 'column is-centered'>
-        <h2>{info} </h2>
-        <DateRangeView 
-          dateRange={props.dateRange} 
-          onClick={props.onClick}
-          style={{height:10}}/>
-        
-        <ShowCalendar onClick={props.onClick} dateRange={props.dateRange} />
-        <p>Today's date is <strong>{new Date().toLocaleDateString("en-US", options)} </strong> , week {myDate.weekNumber(new Date())}  </p>
-        
-      </div>
-    )
-  }
-
-  let DateRangeView = (props) => {
-    
-    let date = props.dateRange
-    // year not necessary
-    // if same month don't repeat month on weekEndsOn
-
-    let options = {weekday: "short",  month: "short", day: "numeric"}
-    date = date.toLocaleDateString("en-US", options)
-    
-    return(
-      <div class="field has-addons is-centered">
-          <p class="control">
-          <button onClick={props.onClick} value= 'left' id="left-arrow" class="button"> 
-            <span class="icon is-small">
-              <i class="fas fa-arrow-circle-left"></i>
-            </span>
-          </button>
-          </p>
-          <p class="control">
-          <button class="button textInside">
-            <span id="viewing"> <strong>{date} </strong></span>
-          </button>
-          </p>
-          <p class="control" >
-          <button onClick={props.onClick} value = 'right' id="right-arrow" class="button">
-            <span class="icon is-small">
-              <i class="fas fa-arrow-alt-circle-right"></i>
-          </span>
-          </button>
-          </p>
-        </div>
-    )
-  }
-  let ShowCalendar = (props) => {
-    //  // ✅ a change in default state: { from: ..., to: ... }
-    const defaultValue = {
-      year: props.dateRange.getFullYear(),
-      month: props.dateRange.getMonth() + 1,
-      day: props.dateRange.getDate(),
-    };
-    const [selectedDay, setSelectedDay] = useState(defaultValue);
-
-    return (
-      <Calendar
-      value={defaultValue}
-      onChange={props.onClick}
-      colorPrimary="#9c88ff" // added this
-      calendarClassName="custom-calendar" // and this
-      calendarTodayClassName="custom-today-day" // also this
-      shouldHighlightWeekends
-    />
-    );
-  }
+ 

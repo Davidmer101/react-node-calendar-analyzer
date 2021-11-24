@@ -130,7 +130,7 @@ let LeftSection = (props) => {
                 <div class="block">
                   <h1 class="title" style={{color: "lightblue"}}>Analyze Your Calendar</h1>
                   <h6 class="subtitle" style={{color: "gray"}}>Made with Google Calendar API</h6>
-                  <hr/>
+                  <hr style={{width: '100%'}}/>
                 </div>
                 <div class="block">
                   <p class = 'homePageParagraph'> Analyze and learn how you spent your past days, weeks, or months from your google calendar.</p> 

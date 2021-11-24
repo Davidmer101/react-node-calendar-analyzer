@@ -1,6 +1,6 @@
 import useFetch from "../useFetch";
 import {useState} from 'react'
-import {CalendarView, Productivity} from './Views.js'
+import {TableView, Productivity} from './Views.js'
 import * as myDate from '../date.js';
 import { Calendar } from "react-modern-calendar-datepicker";
 
@@ -42,14 +42,14 @@ let Monthly = (props) => {
 
     return (
         <div class = 'columns'>
-            <CalendarView dataC={data}/>
-            <Summaries onClick = {e => adjustMonth(e)} dateRange = {dateRange} />
+            {/* <TableView dataC={data}/> */}
+            <MonthlyCalendarView onClick = {e => adjustMonth(e)} dateRange = {dateRange} />
             <Productivity data = {data}/>
           </div>
         )
 }
 
-export let Summaries = (props) => {
+export let MonthlyCalendarView = (props) => {
     let date = new Date(props.dateRange)
     let monthNumber = date.getMonth()
     let currentMonth = (new Date()).getMonth()
@@ -64,7 +64,7 @@ export let Summaries = (props) => {
     let options = {weekday: "short",  month: "short", day: "numeric", year: "numeric"}
     return (
       <div class = 'column is-centered'>
-        <h2>  Your month {monthNumber} summary </h2>
+        <h1>  Your month {monthNumber} summary </h1>
         <DateRangeView 
           dateRange={props.dateRange} 
           onClick={props.onClick}

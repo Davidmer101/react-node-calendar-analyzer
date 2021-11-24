@@ -1,14 +1,14 @@
 import useFetch from "../useFetch";
 import '../App.css'
 import * as myDate from '../date.js';
-import {Link, Outlet} from 'react-router-dom'
+import {Link, Outlet, useNavigate} from 'react-router-dom'
 // copied from weekly.js
 import React, {useState} from "react"
 import { useTable } from 'react-table'
 import "react-modern-calendar-datepicker/lib/DatePicker.css";
 import DatePicker from "react-modern-calendar-datepicker";
 import { Calendar } from "react-modern-calendar-datepicker";
-import {CalendarView, Productivity} from './Views.js';
+import {TableView, Productivity} from './Views.js';
 
   let Daily = (props) => {
       let [day, setDay] = useState(props.day)
@@ -46,14 +46,7 @@ import {CalendarView, Productivity} from './Views.js';
       }
       // alert('data is: ' + JSON.stringify(data) + "\n dataMapped is: " + JSON.stringify(dataMapped))
       return(
-          <div class = 'columns'>
-            <CalendarView dataC={dataMapped}/>
-            <div class='column'>
-              <Outlet />
-            </div>
-            <Summaries onClick = {e => adjustDay(e)} dateRange = {dateRange} />
-            <Productivity data = {data}/>
-          </div>
+            <DailyCalendarView onClick = {e => adjustDay(e)} dateRange = {dateRange} />
       )   
   }
 // {/* <h2 >{requested.date.slice(11)}</h2> */}
@@ -89,27 +82,35 @@ function addLink (calData) {
   }
 
   
-  
-  let Summaries = (props) => {
+  export let DailyCalendarView = (props) => {
     let date = props.dateRange
     let info = ''
     if(date.getDate() == (myDate.updateDate((new Date()), - 1)).getDate()) {
       // alert('yesterday')
-      info = 'yesterday'
+      info = 'Yesterday'
     } else if(date.getDate() == (new Date()).getDate() ){
       // alert('today')
-      info = `today`
+      info = `Today`
     } else if (date.getDate() == (myDate.updateDate((new Date()), 1)).getDate()) {
-      info = `tomorrow`
+      info = `Tomorrow`
     }
     let options = {weekday: "short",  month: "short", day: "numeric", year: "numeric"}
     return (
-      <div class = 'column is-centered'>
-        <h2>{info} </h2>
-        <DateRangeView 
-          dateRange={props.dateRange} 
-          onClick={props.onClick}
-          style={{height:10}}/>
+      <div class = 'column is-centered is-4'>
+        <div class="columns ">
+          <div class="column">
+            <h1>{info} </h1>
+          </div>
+          <div style={{'margin-right': '150px', 'margin-bottom': 0}} class="column">
+            <DateRangeView 
+            dateRange={props.dateRange} 
+            onClick={props.onClick}
+            style={{height:10}}/>
+          </div>
+        </div>
+        
+        
+        
         
         <ShowCalendar onClick={props.onClick} dateRange={props.dateRange} />
         <p>Today's date is <strong>{new Date().toLocaleDateString("en-US", options)} </strong> , week {myDate.weekNumber(new Date())}  </p>

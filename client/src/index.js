@@ -32,8 +32,6 @@ function Index () {
           <Route path="/:period/:type/:specific/:date" element={<Router/>} >    {/*{<Daily day={new Date()} */}
             <Route path="/:period/:type/:specific/:date/:detail" element={<CalName/>} />
           </Route>
-          <Route path="/weekly" element={<Weekly weekNum = {myDate.weekNumber(new Date())}/>} />
-          <Route path="/monthly" element={ <Monthly monthNum = {(new Date()).getMonth()} />} />
           <Route path="/custom" element={<Custom/>} />
         </Route>
       </Routes>

@@ -6,7 +6,8 @@ import { useTable } from 'react-table'
 import "react-modern-calendar-datepicker/lib/DatePicker.css";
 import DatePicker from "react-modern-calendar-datepicker";
 import { Calendar } from "react-modern-calendar-datepicker";
-
+import { Pie } from 'react-chartjs-2';
+import Chart from "react-google-charts";
 
 let productivity = {counter: {productive: 0, neutral: 0, destructive: 0, others:0}, list:{productivityList: ["education", "med", "work", "tasks"], neturalList:["life"], destructiveList:['entertainment']}}
 
@@ -27,8 +28,10 @@ function  ViewButtons (props) {
     }
   }
 
-  export let CalendarView = (props) => {
-      let columnsData = [
+  export let TableView = (props) => {
+    let columnsData, data
+    if (props.type == 'calName') {
+      columnsData = [
         {
           Header: 'Calendar',
           accessor: 'calName', // accessor is the "key" in the data
@@ -38,9 +41,9 @@ function  ViewButtons (props) {
           accessor: 'totalHours',
         },
       ]
-
+  
      
-      let data = [
+       data = [
         {
           "calName": 'Loading',
           "totalHours": 0,
@@ -48,16 +51,35 @@ function  ViewButtons (props) {
           
         }
       ]
-    
+    } else {
+      columnsData = [
+        {
+          Header: 'Event',
+          accessor: 'eventName', // accessor is the "key" in the data
+        },
+        {
+          Header: 'Hours',
+          accessor: 'totalHours',
+        },
+      ]
+ 
+       data = [
+        {
+          "eventName": 'Loading',
+          "totalHours": 0,
+          "id": 'Loading',
+          
+        }
+      ]
+    }
+ 
       if (props.dataC) {
         data = props.dataC
       }
       
-
       return(
-        <div class = 'column'>
-            <p class="is-centered">Calendar</p>
-            <ViewButtons type='calendar'/>
+        <div class = 'column' >
+            {/* <ViewButtons type='calendar'/> */}
             <TableData columnsT={columnsData} dataT={data}/>
 
         </div>
@@ -134,7 +156,10 @@ function  ViewButtons (props) {
     )
   }
   
-
+ 
+  function percentage(decimal) {
+    return (Math.round(decimal * 100) + '%')
+  }
 
   export let Productivity = (props) => {
     if (props.data) {
@@ -155,18 +180,74 @@ function  ViewButtons (props) {
         accessor: 'destructive',
       },
     ]
+    let data = [productivity.counter, {productive: percentage(productivity.counter.productive/totalRecorded), neutral:  percentage(productivity.counter.neutral/totalRecorded), destructive: percentage(productivity.counter.destructive/totalRecorded)}]
 
-    let data = [productivity.counter]
+    let dataToChart = {
+      labels: ['productive', 'neutral', 'destructive'],
+      datasets: [
+        {
+          label: 'hours',
+          data: [percentage(productivity.counter.productive/totalRecorded), percentage(productivity.counter.neutral/totalRecorded), percentage(productivity.counter.destructive/totalRecorded) ],
+          // data: [18, 39, 17],
+          backgroundColor: [
+            'rgba(75, 255, 0, 19)',
+            'rgba(125, 99, 255, 24)',
+            'rgba(255, 15, 6, 12)',
+          ], 
+          borderColor: [
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 99, 132, 0.2)',
+          ],  
+          borderWidth: 1,      
+          
+        },
+        
+
+
+      ],
+
+    }
+
+  
     return (
-      <div class = 'column'> 
-          <p> Productivity</p>
-          <ViewButtons type='productivity'/>
-          <TableData columnsT={columnsData} dataT={data}/>
-           <div class= 'column'>
+      <div class = 'column is-centered'> 
+
+              {/* <h1 style={{color: 'brown', 'text-align': 'center', 'margin-bottom': '2px'}}> Productivity </h1> */}
+              {/* <ViewButtons type='productivity'/> */}
+              {props.show == 'table' ? 
+                <TableData columnsT={columnsData} dataT={data}/>:
+                <TextData data = {productivity.counter} />
+              }
+      
+          <div class= 'column is-centered' >
+          {/* <Chart
+              width={"100%"}
+              height={"100%"}
+              chartType="PieChart"
+              loader={<div>Loading Chart</div>}
+              data={[
+                ['Productivity', 'Hours per Day'],
+                ['Pro', productivity.counter.productive],
+                ['Neu', productivity.counter.neutral],
+                ['Des', productivity.counter.destructive],
+              ]}
+              options={{
+                // title: 'My Daily Activities',
+                // legend: {
+                //   position: 'labeled'
+                // },
+                pieSliceText: 'label',
+                legend: 'none' 
+                
+              }}
+              rootProps={{ 'data-testid': '1' }}
+            /> */}
+          </div>
+          <div class= 'column is-centered' >
             <strong> Total Hours Recorded: </strong> {totalRecorded}
           </div>
-
-      </div>
+        </div>
 
     )
   }
@@ -176,7 +257,7 @@ function  ViewButtons (props) {
     return(
       <>
             <div class= 'column'> 
-              <strong> Productive: </strong>  {props.data.productive}
+              <strong> Productive: </strong>  {props.data.productive} 
             </div>
 
             <div class= 'column'> 
@@ -207,3 +288,4 @@ function  ViewButtons (props) {
     })
     
   }
+

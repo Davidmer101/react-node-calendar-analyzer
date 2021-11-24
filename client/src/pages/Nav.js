@@ -2,11 +2,12 @@ import React from 'react';
 import { Outlet, Link } from 'react-router-dom';
 import 'bulma/css/bulma.min.css';
 import isSignedIn from "../App.js";
+import * as myDate from '../date.js'
 
 function NavBarSymbols () {
     return(
         <div class="navbar-brand">
-                <Link to="/" class="navbar-item" > 
+                <Link to="/home" class="navbar-item" > 
                 {/* <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28"></img> */}
                     
                     <span class="icon-text">
@@ -27,11 +28,14 @@ function NavBarSymbols () {
 }
 
 function LeftNavBarChocies() {
+    let today = new Date()
+    let currentWeekNum = myDate.weekNumber(today)
+    let currentMonthNum = (new Date()).getMonth()
     return (
         <div id="left-navbar-choices" class="navbar-start">
-            <Link to={`/daily/calName/all/${new Date().toDateString()}`} key={'period'} class="navbar-item" > Daily </Link>
-            <Link to="/weekly" class="navbar-item"> Weekly </Link>
-            <Link to="/monthly" class="navbar-item"> Monthly </Link> 
+            <Link to={`/daily/calName/all/${today.toDateString()}`} key={'period'} class="navbar-item" > Daily </Link>
+            <Link to={`/weekly/calName/all/${currentWeekNum}`} class="navbar-item"> Weekly </Link>
+            <Link to={`/monthly/calName/all/${currentMonthNum}`} class="navbar-item"> Monthly </Link> 
             <Link to="/custom" class="navbar-item"> Custom </Link> 
         </div>
     )

@@ -1,12 +1,9 @@
 import express from 'express';
-export const daysRouter = express.Router();
+export const calendarRouter = express.Router();
 import sqlite3 from 'sqlite3';
-import {calendarRouter} from './calendar.js'
 const db = new sqlite3.Database(process.env.TEST_DATABASE || './db.sqlite')
 
-daysRouter.use('/calendar', calendarRouter);
-
-daysRouter.param('weekId', (req, res, next, weekId) => { // check if Id exits (simplifying)
+calendarRouter.param('weekId', (req, res, next, weekId) => { // check if Id exits (simplifying)
     const sql = 'SELECT * FROM Weeks WHERE Weeks.id = $weekId ';
     const values = {$weekId: weekId};
     db.get(sql, values, (error, week) => {
@@ -21,16 +18,22 @@ daysRouter.param('weekId', (req, res, next, weekId) => { // check if Id exits (s
     })
 })
 
-daysRouter.get('/', (req, res, next) => {
-    const sql = 'SELECT * FROM Records WHERE Records.id = "Mon Sep 27 2021"';
+calendarRouter.get('/', (req, res, next) => {
+    let calName = req.query.calName
+    let dateRange = req.query.dateRange
+    const sql = `SELECT eventName, sum(duration) as totalHours, id
+                 FROM (SELECT DISTINCT id, eventName, calName, startTime, duration FROM Records)
+                 WHERE Id="${dateRange}" and calName = '${calName}'
+                 GROUP BY eventName`
     db.all(sql, (error, data) => {
         if(error) {
             next(error);
         } else if (data) {
             res.status(200).json({records: data})
-            next();
+            // next();
+            
         } else {
-            res.sendStatus(404);
+            res.sendStatus(404).json({inCalendar: 'not found error'});
         }
     })
     // db.all(`SELECT * FROM Weeks WHERE username = efc`,
@@ -47,31 +50,19 @@ daysRouter.get('/', (req, res, next) => {
     //     });
 }) 
 
-daysRouter.get('/:type/:specific/:date/:detail', (req, res, next) => {
-    let sql
-    let type = req.params.type  //calName or eventName maybe description
-    let day = req.params.date
-  
-    if (req.params.detail == 'none') {
-        sql = `SELECT ${type} , sum(duration) as totalHours, id 
-        FROM (SELECT DISTINCT id, eventName, calName, startTime, duration FROM Records)
-        WHERE id = "${day}"
-        GROUP BY ${type}
-        ORDER BY totalHours DESC `
-    } else {
-        sql = `SELECT ${type} , sum(duration) as totalHours, id 
-        FROM (SELECT DISTINCT id, eventName, calName, startTime, duration FROM Records)
-        WHERE id = "${day}" and calName = "${req.params.detail}"
-        GROUP BY ${type}
-        ORDER BY totalHours DESC `
-    }
-     
+calendarRouter.get('/:calId', (req, res, next) => {
+    let type = 'calName'
+    let cal = req.params.calId
+
+    const sql =`SELECT ${type} , sum(duration) as totalHours, id 
+                FROM (SELECT DISTINCT id, calName, startTime, duration FROM Records)
+                GROUP BY calName
+                ORDER BY totalHours DESC `
     db.all(sql, (error, data) => {
         if(error) {
             next(error)
         } else if (data) {
-            res.status(200).json({records: data})
-            // res.status(200).json({params: req.params})
+            res.status(200).json({records:{calId: cal}})
             next();
         } else {
             res.sendStatus(404);
@@ -81,7 +72,7 @@ daysRouter.get('/:type/:specific/:date/:detail', (req, res, next) => {
     // res.status(200).json({record: "ALL SUCCESSFUL", dayId: req.params.dayId});
 })
 
-daysRouter.post('/', (req, res, next) => {
+calendarRouter.post('/', (req, res, next) => {
     const id = req.body.id;
     const eventName = req.body.eventName;
     const startTime = req.body.startTime;
@@ -125,7 +116,7 @@ daysRouter.post('/', (req, res, next) => {
 
 })
 
-daysRouter.put('/:weekId', (req, res, next) => {
+calendarRouter.put('/:weekId', (req, res, next) => {
     const id = req.body.week.id;
     const cal1 = req.body.week.cal1;
     const cal2 = req.body.week.cal2;
@@ -163,7 +154,7 @@ daysRouter.put('/:weekId', (req, res, next) => {
     })
 })
 
-daysRouter.delete('/', (req, res, next) => {
+calendarRouter.delete('/', (req, res, next) => {
     const sql = `DELETE FROM Records`;
     db.run(sql, (error) => {
         if(error) {

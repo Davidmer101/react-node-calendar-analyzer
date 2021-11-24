@@ -51,25 +51,25 @@ import * as myDate from './date.js';
       let date = myDate.edgeDaysOfEachMonth()
       myRequestAndStore.listOfCalendars(date.startOfThreeMonthsAgo, date.endOfCurrentMonth)
       
-      setTimeout(() => {
-        myRequestAndStore.listOfCalendars(date.startOfSixMonthsAgo, date.startOfThreeMonthsAgo)
-      }, 5000);
+      // setTimeout(() => {
+      //   myRequestAndStore.listOfCalendars(date.startOfSixMonthsAgo, date.startOfThreeMonthsAgo)
+      // }, 5000);
 
-      setTimeout(() => {
-        myRequestAndStore.listOfCalendars(date.startOfNineMonthsAgo, date.startOfSixMonthsAgo)
-      }, 15000);
+      // setTimeout(() => {
+      //   myRequestAndStore.listOfCalendars(date.startOfNineMonthsAgo, date.startOfSixMonthsAgo)
+      // }, 15000);
 
-      setTimeout(() => {
-        myRequestAndStore.listOfCalendars(date.startOfTwelveMonthsAgo, date.startOfNineMonthsAgo)
-        alert(
-          `today is ${(new Date()).toDateString()} \n
-          end of this month is: ${date.endOfCurrentMonth.toDateString()}  \n
-          three months ago it was: ${date.startOfThreeMonthsAgo.toDateString()}  \n
-          six months ago it was: ${date.startOfSixMonthsAgo.toDateString()}  \n
-          nine months ago it was: ${date.startOfNineMonthsAgo.toDateString()} \n
-          twelve months ago it was: ${date.startOfTwelveMonthsAgo.toDateString()}`
-        )
-      }, 25000);
+      // setTimeout(() => {
+      //   myRequestAndStore.listOfCalendars(date.startOfTwelveMonthsAgo, date.startOfNineMonthsAgo)
+      //   alert(
+      //     `today is ${(new Date()).toDateString()} \n
+      //     end of this month is: ${date.endOfCurrentMonth.toDateString()}  \n
+      //     three months ago it was: ${date.startOfThreeMonthsAgo.toDateString()}  \n
+      //     six months ago it was: ${date.startOfSixMonthsAgo.toDateString()}  \n
+      //     nine months ago it was: ${date.startOfNineMonthsAgo.toDateString()} \n
+      //     twelve months ago it was: ${date.startOfTwelveMonthsAgo.toDateString()}`
+      //   )
+      // }, 25000);
     } else {
       alert("signing you out \n change view to home page")
     }
@@ -84,6 +84,7 @@ import * as myDate from './date.js';
       try {
         if(gapi.auth2.getAuthInstance().isSignedIn.get()) {
           alert ('already signed in ')
+          gapi.auth2.getAuthInstance().signIn();
         } else {
           gapi.auth2.getAuthInstance().signIn();
         }
@@ -129,7 +130,7 @@ let LeftSection = (props) => {
                 <div class="block">
                   <h1 class="title" style={{color: "lightblue"}}>Analyze Your Calendar</h1>
                   <h6 class="subtitle" style={{color: "gray"}}>Made with Google Calendar API</h6>
-                  <hr/>
+                  <hr style={{width: '100%'}}/>
                 </div>
                 <div class="block">
                   <p class = 'homePageParagraph'> Analyze and learn how you spent your past days, weeks, or months from your google calendar.</p> 

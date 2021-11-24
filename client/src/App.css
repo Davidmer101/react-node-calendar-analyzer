@@ -84,3 +84,66 @@ button > * {
 #firstRead {
   margin-top: auto;
 }
+
+/* //Loader */
+.loader {
+  border: 16px solid #f3f3f3; /* Light grey */
+  border-top: 16px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+}
+
+/* Coming Soon Page */
+.bgimg {
+  /* background-image: url('https://wallpaperaccess.com/full/112097.jpg'); */
+  height: 500px;
+  background-position: center;
+  background-size: cover;
+  position: relative;
+  color: white;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 25px;
+}
+
+.topleft {
+  position: absolute;
+  top: 0;
+  left: 16px;
+}
+
+.bottomleft {
+  position: absolute;
+  bottom: 0;
+  left: 16px;
+}
+
+.middle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: red
+}
+
+hr {
+  margin: auto;
+  width: 40%;
+}
+
+/*end of COMING SOON STYLE */
+/*charts */
+/* style={{height:"75%", width:"75%", border: 'solid 1px blue', "margin-bottom" : "0px", "border-bottom": "0px", "padding-bottom": "0%"}} */
+.productivityPieChart {
+  margin-bottom: 0px;
+  margin-left: 10%;
+  border-bottom: 0px;
+  padding-bottom: 0px;
+  /* border: 1px solid red; */
+  width: 65%;
+  height: 50%;
+  padding: 0;
+
+}

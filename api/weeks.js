@@ -48,15 +48,24 @@ weeksRouter.get('/', (req, res, next) => {
     //     });
 }) 
 
-weeksRouter.get('/:weekId', (req, res, next) => {
-  
-    let type = 'calName'
-    let weekNum = req.params.weekId
-    const sql =`SELECT ${type} , sum(duration) as totalHours, id 
-                FROM (SELECT DISTINCT * FROM Records)
-                WHERE weekNum = ${weekNum} 
-                GROUP BY calName
-                ORDER BY totalHours DESC `
+weeksRouter.get('/:type/:specific/:date/:detail', (req, res, next) => {
+    let sql
+    let type = req.params.type
+    let weekNum = req.params.date
+    if(req.params.detail == 'none') {
+        sql =`SELECT ${type} , sum(duration) as totalHours, id 
+        FROM (SELECT DISTINCT * FROM Records)
+        WHERE weekNum = ${weekNum} 
+        GROUP BY ${type}
+        ORDER BY totalHours DESC `
+    } else {
+        sql =`SELECT ${type} , sum(duration) as totalHours, id 
+        FROM (SELECT DISTINCT * FROM Records)
+        WHERE weekNum = ${weekNum} and calName = "${req.params.detail}"
+        GROUP BY ${type}
+        ORDER BY totalHours DESC `
+    }
+    
 
     db.all(sql, (error, data) => {
         if(error) {

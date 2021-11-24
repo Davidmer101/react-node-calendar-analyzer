@@ -47,20 +47,31 @@ daysRouter.get('/', (req, res, next) => {
     //     });
 }) 
 
-daysRouter.get('/:dayId', (req, res, next) => {
-    let type = 'calName'
-    let day = req.params.dayId
-
-    const sql =`SELECT ${type} , sum(duration) as totalHours, id 
-                FROM (SELECT DISTINCT id, calName, startTime, duration FROM Records)
-                WHERE id = "${day}" 
-                GROUP BY calName
-                ORDER BY totalHours DESC `
+daysRouter.get('/:type/:specific/:date/:detail', (req, res, next) => {
+    let sql
+    let type = req.params.type  //calName or eventName maybe description
+    let day = req.params.date
+  
+    if (req.params.detail == 'none') {
+        sql = `SELECT ${type} , sum(duration) as totalHours, id 
+        FROM (SELECT DISTINCT id, eventName, calName, startTime, duration FROM Records)
+        WHERE id = "${day}"
+        GROUP BY ${type}
+        ORDER BY totalHours DESC `
+    } else {
+        sql = `SELECT ${type} , sum(duration) as totalHours, id 
+        FROM (SELECT DISTINCT id, eventName, calName, startTime, duration FROM Records)
+        WHERE id = "${day}" and calName = "${req.params.detail}"
+        GROUP BY ${type}
+        ORDER BY totalHours DESC `
+    }
+     
     db.all(sql, (error, data) => {
         if(error) {
             next(error)
         } else if (data) {
             res.status(200).json({records: data})
+            // res.status(200).json({params: req.params})
             next();
         } else {
             res.sendStatus(404);

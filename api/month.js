@@ -3,15 +3,25 @@ export const monthsRouter = express.Router();
 import sqlite3 from 'sqlite3';
 const db = new sqlite3.Database(process.env.TEST_DATABASE || './db.sqlite')
 
-monthsRouter.get('/:monthId', (req, res, next) => {
-  
-    let type = 'calName'
-    let monthNum = req.params.monthId
-    const sql =`SELECT ${type} , sum(duration) as totalHours, id 
-                FROM (SELECT DISTINCT * FROM Records)
-                WHERE monthNum = ${monthNum} 
-                GROUP BY calName
-                ORDER BY totalHours DESC `
+monthsRouter.get('/:type/:specific/:date/:detail', (req, res, next) => {
+    let sql
+    let type = req.params.type
+    let monthNum = req.params.date
+
+    if (req.params.detail == 'none') {
+        sql =`SELECT ${type} , sum(duration) as totalHours, id 
+        FROM (SELECT DISTINCT * FROM Records)
+        WHERE monthNum = ${monthNum} 
+        GROUP BY ${type}
+        ORDER BY totalHours DESC `
+    } else {
+        sql =`SELECT ${type} , sum(duration) as totalHours, id 
+        FROM (SELECT DISTINCT * FROM Records)
+        WHERE monthNum = ${monthNum} and calName = "${req.params.detail}"
+        GROUP BY ${type}
+        ORDER BY totalHours DESC `
+    }
+    
 
     db.all(sql, (error, data) => {
         if(error) {

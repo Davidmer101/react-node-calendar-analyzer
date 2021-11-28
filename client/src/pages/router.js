@@ -9,10 +9,24 @@ import{ DailyCalendarView} from './Daily.js'
 import {WeeklyCalendarView} from './Weekly.js'
 import {MonthlyCalendarView} from './Monthly.js'
 import Loader from './Loader.js'
+
+export function FirstNavigation () {
+ 
+  
+}
+
 export default function Router () {
+  // let first = window.localStorage.getItem('firstTime');
+  // if(first) {
+  //   alert('first time')
+  //   window.localStorage.removeItem('firstTime');
+  // }
+    // alert('in router')
     let weekRange = {weekStartsOn: new Date('Sun Oct 31 2021'), weekEndsOn: new Date('Sat Nov 5 2021')}
     let dateInMonth = new Date()
     let params = useParams()
+    // alert(JSON.stringify(params) + ' ' + counter);
+    // counter +=1; 
     let navigate = useNavigate()
     let {period, type, specific, date, detail} = params // period=daily/weekly/monthly/custom, type=calName/eventName specific=all/{calName}, date=date/weekNum/monthNum/customDates
     let url = `/api/${period}/${type}/${specific}/${date}/none`

@@ -162,6 +162,8 @@ function edgeDaysOfEachMonth () {
   let endOfCurrentMonth = adjustMonthDate(1, 0)
   //Aug Sep Oct Nov
   //three months ago Sept 1
+  let startOfOneMonthAgo = adjustMonthDate(0, 1)
+  let startOfTwoMonthsAgo = adjustMonthDate(-1, 1);
   let startOfThreeMonthsAgo = adjustMonthDate(-2, 1);
   let startOfSixMonthsAgo = adjustMonthDate(-5, 1)
   let startOfNineMonthsAgo = adjustMonthDate(-8, 1)
@@ -169,7 +171,7 @@ function edgeDaysOfEachMonth () {
 //   let aYearAgo = new Date((new Date()).setYear(2020))
   let aYearAgo = adjustMonthDate(-12, (new Date).getDate())
 
-  return {endOfCurrentMonth: endOfCurrentMonth, startOfThreeMonthsAgo: startOfThreeMonthsAgo, startOfSixMonthsAgo, startOfNineMonthsAgo:startOfNineMonthsAgo, startOfTwelveMonthsAgo: startOfTwelveMonthsAgo, aYearAgo: aYearAgo}
+  return {endOfCurrentMonth: endOfCurrentMonth, startOfOneMonthAgo: startOfOneMonthAgo, startOfTwoMonthsAgo:startOfTwoMonthsAgo ,startOfThreeMonthsAgo: startOfThreeMonthsAgo, startOfSixMonthsAgo, startOfNineMonthsAgo:startOfNineMonthsAgo, startOfTwelveMonthsAgo: startOfTwelveMonthsAgo, aYearAgo: aYearAgo}
 }
 
 /**

@@ -5,6 +5,7 @@ import * as myRequestAndStore from './requestAndStore.js'
 import axios from 'axios';
 import RequestMyServer from './requestMyServer.js';
 import * as myDate from './date.js';
+import { FirstNavigation } from './pages/router.js';
 
 
   let gapi = window.gapi
@@ -13,14 +14,15 @@ import * as myDate from './date.js';
    */
   window.onload = handleClientLoad;
   function handleClientLoad() {
-    gapi.load('client:auth2', initClient);
+      gapi.load('client:auth2', initClient1);    
   }
 
+ 
   /**
    *  Initializes the API client library and sets up sign-in state
    *  listeners.
    */
-    function initClient() {
+    function initClient1() {
     gapi.client.init({
         // Client ID and API key from the Developer Console
       apiKey: 'AIzaSyBYxwNwT53EbvQNvhVCDD3FZW3KvTQWRBs',
@@ -30,12 +32,13 @@ import * as myDate from './date.js';
       // Authorization scopes required by the API; multiple scopes can be
       // included, separated by spaces.
       scope: 'https://www.googleapis.com/auth/calendar.readonly'
-    }).then(function () {
+    }).then(async function () {
       // Listen for sign-in state changes.
       gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
 
       // Handle the initial sign-in state.
       updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+      
     
     }, function(error) {
       alert(JSON.stringify(error, null, 2));
@@ -46,32 +49,44 @@ import * as myDate from './date.js';
    *  Called when the signed in status changes, to update the UI
    *  appropriately. After a sign-in, the API is called.
    */
-    function updateSigninStatus(signedIn) {
+   async function updateSigninStatus(signedIn) {
+    //  alert(signedIn)
     if (signedIn) {
       let date = myDate.edgeDaysOfEachMonth()
-      myRequestAndStore.listOfCalendars(date.startOfThreeMonthsAgo, date.endOfCurrentMonth)
+
+      try {
+      // alert('before requesting at')
       
-      // setTimeout(() => {
-      //   myRequestAndStore.listOfCalendars(date.startOfSixMonthsAgo, date.startOfThreeMonthsAgo)
-      // }, 5000);
+          await myRequestAndStore.ListOfCalendars(date.startOfOneMonthAgo, date.endOfCurrentMonth)
+          await myRequestAndStore.ListOfCalendars(date.startOfTwoMonthsAgo, date.startOfOneMonthAgo)
+          setTimeout(async () => {
+            await myRequestAndStore.ListOfCalendars(date.startOfThreeMonthsAgo, date.startOfTwoMonthsAgo)
+            await myRequestAndStore.ListOfCalendars(date.startOfSixMonthsAgo, date.startOfThreeMonthsAgo)
+            await myRequestAndStore.ListOfCalendars(date.startOfNineMonthsAgo, date.startOfSixMonthsAgo)
+            await myRequestAndStore.ListOfCalendars(date.startOfTwelveMonthsAgo, date.startOfNineMonthsAgo)
+          }, 1000);
+          
+          let daily = document.getElementById('daily')
+          // alert('clicking daily')
+          daily.click()
+          
+          
+        // alert('finish requests')
+        // window.localStorage.setItem('firstTime', true)
 
-      // setTimeout(() => {
-      //   myRequestAndStore.listOfCalendars(date.startOfNineMonthsAgo, date.startOfSixMonthsAgo)
-      // }, 15000);
+        // alert('about to call change to daily')
+        
 
-      // setTimeout(() => {
-      //   myRequestAndStore.listOfCalendars(date.startOfTwelveMonthsAgo, date.startOfNineMonthsAgo)
-      //   alert(
-      //     `today is ${(new Date()).toDateString()} \n
-      //     end of this month is: ${date.endOfCurrentMonth.toDateString()}  \n
-      //     three months ago it was: ${date.startOfThreeMonthsAgo.toDateString()}  \n
-      //     six months ago it was: ${date.startOfSixMonthsAgo.toDateString()}  \n
-      //     nine months ago it was: ${date.startOfNineMonthsAgo.toDateString()} \n
-      //     twelve months ago it was: ${date.startOfTwelveMonthsAgo.toDateString()}`
-      //   )
-      // }, 25000);
+        // alert('about to change to daily page')
+        // window.location.href = `./daily/calName/all/${(new Date()).toDateString()}`
+       
+    
+      } catch (error) {
+          alert('error in App.js is: ' + JSON.stringify(error))
+      }
+
     } else {
-      alert("signing you out \n change view to home page")
+      
     }
   }
 
@@ -84,21 +99,37 @@ import * as myDate from './date.js';
       try {
         if(gapi.auth2.getAuthInstance().isSignedIn.get()) {
           alert ('already signed in ')
-          gapi.auth2.getAuthInstance().signIn();
+          updateSigninStatus(true)
         } else {
           gapi.auth2.getAuthInstance().signIn();
         }
       } catch (error) {
         alert(error.message)
       }
+      // try {
+      //   gapi.load('client:auth2', initClient1('signIn')); 
+      //     // gapi.auth2.getAuthInstance().signIn();
+      // } catch (error) {
+      //   alert('in handleAuthClick: '+ error.message)
+
+      // }
   }
 
   /**
    *  Sign out the user upon button click.
    */
-  export async function handleSignoutClick(event) {
-    await sendDelete();
+  export function handleSignoutClick(event) {
+    try {
+      sendDelete();
     gapi.auth2.getAuthInstance().signOut();
+    // alert('signedOut: ' + gapi.auth2.getAuthInstance().isSignedIn.get())
+    window.location.assign(`/`)
+    } catch (error) {
+      alert('error in handleSignoutClick: ' + error.message)
+    }
+    
+    // gapi.load('client:auth2'); 
+    
   }
 
   async function sendDelete(){

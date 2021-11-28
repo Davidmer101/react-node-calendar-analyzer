@@ -24,6 +24,8 @@ function Index () {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/authorize" element={<Home />} />
+
         <Route path="/" element={<Nav onSignout = {myApp.handleSignoutClick}/>} >
           <Route path="/home" element={<Home />} />
           <Route path="/blogs" element={<Blogs/>} />

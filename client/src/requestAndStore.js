@@ -7,7 +7,10 @@ let eventList = [];
 let gapi = window.gapi; 
 let numberOfEvents = 0
 
-   export async function listOfCalendars(dayBehind, dayAhead) {
+
+   export async function ListOfCalendars(dayBehind, dayAhead) {
+    //  alert('making a request ' + dayBehind + ' to ' + dayAhead)
+
     try {
       let response = await gapi.client.calendar.calendarList.list({});
       let calendars = response.result.items;
@@ -20,6 +23,8 @@ let numberOfEvents = 0
     } catch (error) {
       alert('error in requestAndStore-> listOfCalendars ' + error.message);
     }
+    
+ 
   }
 
   /**
@@ -36,7 +41,7 @@ let numberOfEvents = 0
  * Eventually, it will populate @object weeklyData and call @function sendToServer() 
  */
  async function events(timeId, calName, calId, minDate, maxDate) {
-
+  // alert('in events')
   //  console.log(`called with ${timeId}, ${calName}, ${new Date(minDate).toLocaleString()}, ${new Date(maxDate).toLocaleString()}`)
   try {
     let response = await gapi.client.calendar.events.list({
@@ -57,7 +62,7 @@ let numberOfEvents = 0
   events.forEach((event) => {
 
       numberOfEvents++;
-      console.log('num of events is: '+ numberOfEvents)
+      console.log('num of events is: '+ numberOfEvents + ' at ' + (new Date()).toLocaleString())
     //  console.log(event.summary + ':' + new Date(event.start.dateTime).toLocaleString() + ':' + new Date(event.end.dateTime).toLocaleString() + ':' + calName + ':' + 3 + ':' + 3)
      if (event.summary !== undefined && !event.start.date) { // ignores undefined and all day events
       if (!(eventList.includes(event.summary))) {
@@ -111,6 +116,7 @@ let numberOfEvents = 0
  }
 
  async function sendPost(id, eventName, startTime, endTime, calName, description, duration, weekNum, monthNum ){
+  // alert('in post')
   try {
    let result = await axios ({
      method: 'post',

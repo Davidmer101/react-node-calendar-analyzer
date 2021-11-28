@@ -33,7 +33,7 @@ function LeftNavBarChocies() {
     let currentMonthNum = (new Date()).getMonth()
     return (
         <div id="left-navbar-choices" class="navbar-start">
-            <Link to={`/daily/calName/all/${today.toDateString()}`} key={'period'} class="navbar-item" > Daily </Link>
+            <Link id={'daily'} to={`/daily/calName/all/${today.toDateString()}`} key={'period'} class="navbar-item" > Daily </Link>
             <Link to={`/weekly/calName/all/${currentWeekNum}`} class="navbar-item"> Weekly </Link>
             <Link to={`/monthly/calName/all/${currentMonthNum}`} class="navbar-item"> Monthly </Link> 
             <Link to="/custom" class="navbar-item"> Custom </Link> 

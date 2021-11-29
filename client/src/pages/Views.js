@@ -6,8 +6,7 @@ import { useTable } from 'react-table'
 import "react-modern-calendar-datepicker/lib/DatePicker.css";
 import DatePicker from "react-modern-calendar-datepicker";
 import { Calendar } from "react-modern-calendar-datepicker";
-import { Pie } from 'react-chartjs-2';
-import Chart from "react-google-charts";
+
 
 let productivity = {counter: {productive: 0, neutral: 0, destructive: 0, others:0}, list:{productivityList: ["education", "med", "work", "tasks"], neturalList:["life"], destructiveList:['entertainment']}}
 

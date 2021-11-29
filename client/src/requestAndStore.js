@@ -133,9 +133,15 @@ let numberOfEvents = 0
         "monthNum": monthNum
      }
  })
-//  alert(JSON.stringify(result))
+ if (!result.data){
+  alert(JSON.stringify(result))
+
+ }
   } catch (error) {
     alert('error in requestAndStore-> sendPost: ' + error.message)
+    alert(JSON.stringify(error))
+    alert(id + ': ' + eventName + ': ' + startTime+ ': ' +endTime+ ': ' +calName+ ': ' +description+ ': ' +duration+ ': ' +weekNum+ ': ' + monthNum)
+    
   }
  }
 

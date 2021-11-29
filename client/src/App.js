@@ -59,16 +59,15 @@ import { FirstNavigation } from './pages/router.js';
       
           await myRequestAndStore.ListOfCalendars(date.startOfOneMonthAgo, date.endOfCurrentMonth)
           await myRequestAndStore.ListOfCalendars(date.startOfTwoMonthsAgo, date.startOfOneMonthAgo)
-          setTimeout(async () => {
-            await myRequestAndStore.ListOfCalendars(date.startOfThreeMonthsAgo, date.startOfTwoMonthsAgo)
-            await myRequestAndStore.ListOfCalendars(date.startOfSixMonthsAgo, date.startOfThreeMonthsAgo)
-            await myRequestAndStore.ListOfCalendars(date.startOfNineMonthsAgo, date.startOfSixMonthsAgo)
-            await myRequestAndStore.ListOfCalendars(date.startOfTwelveMonthsAgo, date.startOfNineMonthsAgo)
-          }, 1000);
+          await myRequestAndStore.ListOfCalendars(date.startOfThreeMonthsAgo, date.startOfTwoMonthsAgo)
+          await myRequestAndStore.ListOfCalendars(date.startOfSixMonthsAgo, date.startOfThreeMonthsAgo)
+          await myRequestAndStore.ListOfCalendars(date.startOfNineMonthsAgo, date.startOfSixMonthsAgo)
+          await myRequestAndStore.ListOfCalendars(date.startOfTwelveMonthsAgo, date.startOfNineMonthsAgo)
+        
           
-          let daily = document.getElementById('daily')
-          // alert('clicking daily')
-          daily.click()
+          // let daily = document.getElementById('daily')
+          // // alert('clicking daily')
+          // daily.click()
           
           
         // alert('finish requests')

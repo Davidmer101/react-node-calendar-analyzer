@@ -1,55 +1,32 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
-import { BrowserRouter as Router, Switch, Route} from "react-router-dom";
-import Home from "./pages/Home";
-import Blogs from "./pages/Blogs";
-import Daily from "./pages/Daily";
-import Weekly from "./pages/Weekly";
-import Monthly from "./pages/Monthly.js";
-import Contact from "./pages/Contact";
+import { BrowserRouter , Routes, Route} from "react-router-dom";
+import Home from "./pages/toDo/Home.js";
+import Contact from "./pages/toDo/Contact";
 import Nav from "./pages/Nav";
-import Custom from "./pages/Custom.js"
+import Custom from "./pages/toDo/Custom.js"
+import Router from "./pages/Router.js"
+import CalName from "./pages/views/DetailView.js"
 import 'bulma/css/bulma.min.css';
-import * as myDate from './date.js';
 import * as myApp from './App.js';
-
 
 function Index () {
   //don't forget App
   return (
-    <Router>
-      <Nav onSignout = {myApp.handleSignoutClick}/>      
-      <Switch>
-        <Route exact path="/">
-          <Home />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<App/>} />
+        <Route path="/" element={<Nav onSignout = {myApp.handleSignoutClick}/>} >
+          <Route path="/home" element={<Home />} />
+          <Route path="/contact" element={<Contact/>} />
+          <Route path="/:period/:type/:specific/:date" element={<Router/>} >    {/*{<Daily day={new Date()} */}
+            <Route path="/:period/:type/:specific/:date/:detail" element={<CalName/>} />
+          </Route>
+          <Route path="/custom" element={<Custom/>} />
         </Route>
-        <Route path="/blogs">
-          <Blogs/>
-        </Route>
-        <Route path="/contact">
-          <Contact/>
-        </Route>
-        <Route path="/app">
-          <App/>
-        </Route>
-        <Route path="/daily">
-          <Daily day={new Date()}/>
-        </Route>
-        <Route path="/weekly">
-          <Weekly weekNum = {myDate.weekNumber(new Date())}/>
-        </Route>
-        <Route path="/monthly">
-          <Monthly monthNum = {(new Date()).getMonth()} />
-        </Route>
-        <Route path="/custom">
-          <Custom/>
-        </Route>
-      </Switch>
-    </Router>
-
+      </Routes>
+    </BrowserRouter>
   
   )
 }
@@ -64,4 +41,3 @@ ReactDOM.render(
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();

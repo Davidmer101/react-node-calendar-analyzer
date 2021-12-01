@@ -1,11 +1,9 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import * as myRequestAndStore from './requestAndStore.js'
 import axios from 'axios';
-import RequestMyServer from './requestMyServer.js';
 import * as myDate from './date.js';
-
+import Loader from '../src/pages/toDo/Loader.js';
 
   let gapi = window.gapi
 /**
@@ -31,6 +29,7 @@ import * as myDate from './date.js';
       // included, separated by spaces.
       scope: 'https://www.googleapis.com/auth/calendar.readonly'
     }).then(function () {
+     
       // Listen for sign-in state changes.
       gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
 
@@ -46,32 +45,15 @@ import * as myDate from './date.js';
    *  Called when the signed in status changes, to update the UI
    *  appropriately. After a sign-in, the API is called.
    */
-    function updateSigninStatus(signedIn) {
+    async function updateSigninStatus(signedIn) {
     if (signedIn) {
-      let date = myDate.edgeDaysOfEachMonth()
-      myRequestAndStore.listOfCalendars(date.startOfThreeMonthsAgo, date.endOfCurrentMonth)
-      
-      setTimeout(() => {
-        myRequestAndStore.listOfCalendars(date.startOfSixMonthsAgo, date.startOfThreeMonthsAgo)
-      }, 5000);
+      console.log('signedIn so change view to show navigation')
 
-      setTimeout(() => {
-        myRequestAndStore.listOfCalendars(date.startOfNineMonthsAgo, date.startOfSixMonthsAgo)
-      }, 15000);
 
-      setTimeout(() => {
-        myRequestAndStore.listOfCalendars(date.startOfTwelveMonthsAgo, date.startOfNineMonthsAgo)
-        alert(
-          `today is ${(new Date()).toDateString()} \n
-          end of this month is: ${date.endOfCurrentMonth.toDateString()}  \n
-          three months ago it was: ${date.startOfThreeMonthsAgo.toDateString()}  \n
-          six months ago it was: ${date.startOfSixMonthsAgo.toDateString()}  \n
-          nine months ago it was: ${date.startOfNineMonthsAgo.toDateString()} \n
-          twelve months ago it was: ${date.startOfTwelveMonthsAgo.toDateString()}`
-        )
-      }, 25000);
     } else {
-      alert("signing you out \n change view to home page")
+      console.log("signing you out \n change view to home page")
+      // let authorize = document.getElementById('authorize')
+      // authorize.click()
     }
   }
 
@@ -80,12 +62,23 @@ import * as myDate from './date.js';
    * functi
    *  Sign in the user upon button click.
    */
-    function handleAuthClick(event) {
+    async function handleAuthClick(event) {
       try {
         if(gapi.auth2.getAuthInstance().isSignedIn.get()) {
-          alert ('already signed in ')
+          console.log('already signed in ')
+          window.location.replace(`./daily/calName/all/${(new Date()).toDateString()}`)
         } else {
-          gapi.auth2.getAuthInstance().signIn();
+          await gapi.auth2.getAuthInstance().signIn();
+          console.log('first time so making a request')
+          let date = myDate.edgeDaysOfEachMonth()
+          // myRequestAndStore.listOfCalendars(date.startOfTwelveMonthsAgo, date.endOfCurrentMonth)
+          let d = document.createElement('div')
+          d.className = 'loader'
+          document.getElementById('home-page').replaceWith(d)
+
+          await myRequestAndStore.listOfCalendars(date.startOfOneMonthAgo, date.endOfCurrentMonth)
+          
+          window.location.replace(`./daily/calName/all/${(new Date()).toDateString()}`)
         }
       } catch (error) {
         alert(error.message)
@@ -98,6 +91,7 @@ import * as myDate from './date.js';
   export async function handleSignoutClick(event) {
     await sendDelete();
     gapi.auth2.getAuthInstance().signOut();
+    window.location.replace('/')
   }
 
   async function sendDelete(){
@@ -114,7 +108,7 @@ import * as myDate from './date.js';
 
   let App = () =>{
     return (
-      <div className="App">
+      <div id = 'app' className="App">
         <header className="App-header">
         < Homepage onClick={handleAuthClick} />
         </header>
@@ -129,8 +123,8 @@ let LeftSection = (props) => {
                 <div class="block">
                   <h1 class="title" style={{color: "lightblue"}}>Analyze Your Calendar</h1>
                   <h6 class="subtitle" style={{color: "gray"}}>Made with Google Calendar API</h6>
-                  <hr/>
                 </div>
+                < hr style={{width:"100%"}} />
                 <div class="block">
                   <p class = 'homePageParagraph'> Analyze and learn how you spent your past days, weeks, or months from your google calendar.</p> 
                 <div class="block">
@@ -164,30 +158,20 @@ let RightSection = () => {
                     </p>
                     <br/>
                   <ul>
-                    <li>username: demofor426</li>
-                    <li>password: Comp4262020</li>
+                    <li>username: comingSoon</li>
+                    <li>password: comingSoon</li>
                   </ul>
                   <br/>
                   <p>Feel free to log in to <a href="https://accounts.google.com/signin/v2/identifier?service=cl&passive=1209600&osid=1&continue=https%3A%2F%2Fcalendar.google.com%2Fcalendar%2Fr&followup=https%3A%2F%2Fcalendar.google.com%2Fcalendar%2Fr&flowName=GlifWebSignIn&flowEntry=ServiceLogin"> Google Calendar</a> and update events as well</p>
                   
               </div>
-                       
-              <a
-                className="App-link"
-                href="https://reactjs.org"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                 Front End Made with React
-              </a>
-              < RequestMyServer />
             </div>
   )
 }
   
 let Homepage = (props) => {
   return(
-    <div class="hero-body">
+    <div class="hero-body" id='home-page'>
         <div class="container">
           <div class="columns">
               <LeftSection onClick = {props.onClick} />

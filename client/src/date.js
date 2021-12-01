@@ -89,10 +89,7 @@
  * @return {number} day updated incase it's below 0 or above number of dates in that month
  */
 function validityCheck (date, day) {
-    // console.log('in validity check day is: ' + day)
-    // console.log('date is: ' + date.toDateString())
     if(day < 0) {
-        // console.log(daysInAMonth(date.getMonth() - 1))
         return day + daysInAMonth(date.getMonth() - 1)
 
     } else if (day > 23) {
@@ -140,7 +137,6 @@ function adjustDate(date) {
 
  function oneWeek(date) {
     let shifts = adjustDate(date)
-    console.log(shifts.shiftLeft + ' ' + shifts.shiftRight)
     let weekStartsOn = new Date(date)
     let weekEndsOn = new Date(date)
     weekStartsOn = updateDate(weekStartsOn, shifts.shiftLeft)
@@ -151,7 +147,6 @@ function adjustDate(date) {
 let input = 'Mon Nov 29 2021'
 let date = new Date(input)
 let givenWeek = oneWeek(date)
-console.log(givenWeek.weekStartsOn.toDateString() + ' ' + givenWeek.weekEndsOn.toDateString())
 
 /**
  * gives first and last day of months starting on the current month
@@ -162,6 +157,8 @@ function edgeDaysOfEachMonth () {
   let endOfCurrentMonth = adjustMonthDate(1, 0)
   //Aug Sep Oct Nov
   //three months ago Sept 1
+  let startOfOneMonthAgo = adjustMonthDate(0, 1)
+  let startOfTwoMonthsAgo = adjustMonthDate(-1, 1);
   let startOfThreeMonthsAgo = adjustMonthDate(-2, 1);
   let startOfSixMonthsAgo = adjustMonthDate(-5, 1)
   let startOfNineMonthsAgo = adjustMonthDate(-8, 1)
@@ -169,7 +166,7 @@ function edgeDaysOfEachMonth () {
 //   let aYearAgo = new Date((new Date()).setYear(2020))
   let aYearAgo = adjustMonthDate(-12, (new Date).getDate())
 
-  return {endOfCurrentMonth: endOfCurrentMonth, startOfThreeMonthsAgo: startOfThreeMonthsAgo, startOfSixMonthsAgo, startOfNineMonthsAgo:startOfNineMonthsAgo, startOfTwelveMonthsAgo: startOfTwelveMonthsAgo, aYearAgo: aYearAgo}
+  return {endOfCurrentMonth: endOfCurrentMonth, startOfOneMonthAgo: startOfOneMonthAgo, startOfTwoMonthsAgo:startOfTwoMonthsAgo ,startOfThreeMonthsAgo: startOfThreeMonthsAgo, startOfSixMonthsAgo, startOfNineMonthsAgo:startOfNineMonthsAgo, startOfTwelveMonthsAgo: startOfTwelveMonthsAgo, aYearAgo: aYearAgo}
 }
 
 /**

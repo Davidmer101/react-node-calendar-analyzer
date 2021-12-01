@@ -1,7 +1,10 @@
 import express from 'express';
 export const daysRouter = express.Router();
 import sqlite3 from 'sqlite3';
+import {calendarRouter} from './calendar.js'
 const db = new sqlite3.Database(process.env.TEST_DATABASE || './db.sqlite')
+
+daysRouter.use('/calendar', calendarRouter);
 
 daysRouter.param('weekId', (req, res, next, weekId) => { // check if Id exits (simplifying)
     const sql = 'SELECT * FROM Weeks WHERE Weeks.id = $weekId ';
@@ -44,20 +47,31 @@ daysRouter.get('/', (req, res, next) => {
     //     });
 }) 
 
-daysRouter.get('/:dayId', (req, res, next) => {
-    let type = 'calName'
-    let day = req.params.dayId
-
-    const sql =`SELECT ${type} , sum(duration) as totalHours, id 
-                FROM (SELECT DISTINCT id, calName, startTime, duration FROM Records)
-                WHERE id = "${day}" 
-                GROUP BY calName
-                ORDER BY totalHours DESC `
+daysRouter.get('/:type/:specific/:date/:detail', (req, res, next) => {
+    let sql
+    let type = req.params.type  //calName or eventName maybe description
+    let day = req.params.date
+  
+    if (req.params.detail == 'none') {
+        sql = `SELECT ${type} , sum(duration) as totalHours, id 
+        FROM (SELECT DISTINCT id, eventName, calName, startTime, duration FROM Records)
+        WHERE id = "${day}"
+        GROUP BY ${type}
+        ORDER BY totalHours DESC `
+    } else {
+        sql = `SELECT ${type} , sum(duration) as totalHours, id 
+        FROM (SELECT DISTINCT id, eventName, calName, startTime, duration FROM Records)
+        WHERE id = "${day}" and calName = "${req.params.detail}"
+        GROUP BY ${type}
+        ORDER BY totalHours DESC `
+    }
+     
     db.all(sql, (error, data) => {
         if(error) {
             next(error)
         } else if (data) {
             res.status(200).json({records: data})
+            // res.status(200).json({params: req.params})
             next();
         } else {
             res.sendStatus(404);
@@ -66,6 +80,8 @@ daysRouter.get('/:dayId', (req, res, next) => {
     
     // res.status(200).json({record: "ALL SUCCESSFUL", dayId: req.params.dayId});
 })
+
+let count = 0
 
 daysRouter.post('/', (req, res, next) => {
     const id = req.body.id;
@@ -95,17 +111,16 @@ daysRouter.post('/', (req, res, next) => {
        $monthNum: monthNum,
     //    $username: username
    }
-
+   
    db.run(sql, values, function(error) {
        if(error) {
         //    next(error);
         // res.redirect('/:weekId');
         console.log('from days error: ' + error.message);
        } else {
-           db.get(`SELECT * FROM Records WHERE Weeks.id = ${this.lastID}`,
-           (error, record) => {
-                res.status(201).json({record: "ALL SUCCESSFUL"});
-           } )
+            console.log('posting successful: ' + count );
+            count++;
+            res.status(201).json({record: "ALL SUCCESSFUL"}).end()
        }
    })
 

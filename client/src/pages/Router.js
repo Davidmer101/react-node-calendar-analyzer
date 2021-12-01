@@ -88,10 +88,7 @@ export default function Router () {
            dateInMonth = new Date(data[0].id)
          }
  
-        } else {
-          alert('For now: \n You can only see from the start of this year (Jan 1 2021) \n \t\t upto \n The end of the current month (Nov 30 2021) \n Period will be extend soon')
-          window.location.replace(`/daily/calName/all/${(new Date()).toDateString()}`)
-        }
+        } 
         
     }
     let adjustPeriod = (e) => {

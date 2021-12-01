@@ -35,7 +35,7 @@ Use the package manager [npm]
 
 
 ## Contributing
-Any contributions such as Pull requests and opening issue are always welcome. 
+Any contributions such as Pull requests and opening issues are always welcome. 
 
 ## License
 Coming Soon!

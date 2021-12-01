@@ -62,14 +62,7 @@ export default function Router () {
     FillDb()
     firstTime = false
   }
-  
-  // let first = window.localStorage.getItem('firstTime');
-  // if(first) {
-  //   alert('first time')
-  //   window.localStorage.removeItem('firstTime');
-  // }
-    // alert('in router')
-    
+      
     let weekRange = {weekStartsOn: new Date('Sun Oct 31 2021'), weekEndsOn: new Date('Sat Nov 5 2021')}
     let dateInMonth = new Date()
     let params = useParams()

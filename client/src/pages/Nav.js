@@ -50,8 +50,8 @@ function LeftNavBarChocies() {
         <div id="left-navbar-choices" class="navbar-start">
             <Link id={'daily'} to={`/daily/calName/all/${today.toDateString()}`} key={'period'} class="navbar-item" > Daily </Link>
             <Link to={`/weekly/calName/all/${currentWeekNum}`} class="navbar-item"> Weekly </Link>
-            <Link to={`/monthly/calName/all/${currentMonthNum}`} class="navbar-item"> Monthly </Link> 
-            <Link to="/custom" class="navbar-item"> Custom </Link> 
+            <Link id={`monthly`} to={`/monthly/calName/all/${currentMonthNum}`} class="navbar-item"> Monthly </Link> 
+            <Link id= {`custom`} to="/custom" class="navbar-item"> Custom </Link> 
         </div>
     )
 }

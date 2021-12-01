@@ -94,7 +94,7 @@ button > * {
   height: 120px;
   /* -webkit-animation: spin 2s linear infinite; Safari */
   animation: spin 2s linear infinite;
-  margin: 25% auto;
+  margin: 25% 25%;
   /* background-color: #282c34; */
 }
 

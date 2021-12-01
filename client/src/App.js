@@ -76,7 +76,7 @@ import Loader from '../src/pages/toDo/Loader.js';
           d.className = 'loader'
           document.getElementById('home-page').replaceWith(d)
 
-          await myRequestAndStore.listOfCalendars(date.startOfOneMonthAgo, date.endOfCurrentMonth)
+          await myRequestAndStore.listOfCalendars(date.startOfTwoMonthsAgo, date.endOfCurrentMonth)
           
           window.location.replace(`./daily/calName/all/${(new Date()).toDateString()}`)
         }

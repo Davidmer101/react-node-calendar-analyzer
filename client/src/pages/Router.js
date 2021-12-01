@@ -34,8 +34,12 @@ export async function FillDb () {
                   scope: 'https://www.googleapis.com/auth/calendar.readonly'
                 }).then(async function () {
 
-                  await listOfCalendars(date.startOfSixMonthsAgo, date.startOfOneMonthAgo)
+                  document.getElementById('monthly').style.visibility = 'hidden'
+                  document.getElementById('custom').style.visibility = 'hidden'
+                  await listOfCalendars(date.startOfSixMonthsAgo, date.startOfTwoMonthsAgo)
                   await listOfCalendars (date.startOfTwelveMonthsAgo, date.startOfSixMonthsAgo)
+                  document.getElementById('monthly').style.visibility = 'visible'
+                  document.getElementById('custom').style.visibility = 'visible'
                 
                 }, function(error) {
                   console.log(JSON.stringify(error, null, 2));
@@ -87,8 +91,7 @@ export default function Router () {
          } else if (period == 'monthly') {
            dateInMonth = new Date(data[0].id)
          }
- 
-        } 
+      } 
         
     }
     let adjustPeriod = (e) => {

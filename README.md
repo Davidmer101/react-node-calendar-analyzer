@@ -22,7 +22,6 @@ Use the package manager [npm]
  cd .\client\
  npm start
 ```
-Alternatively you can visit [this heroku site](react-g-calendar-analyzer.herokuapp.com)
 
 ## Usage
 * Authorize with you google email (demo email and password is available on front page). Once data is gathered you will be redirected to a page showing you today's calendar and event analysis

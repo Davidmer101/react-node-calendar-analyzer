@@ -81,6 +81,8 @@ daysRouter.get('/:type/:specific/:date/:detail', (req, res, next) => {
     // res.status(200).json({record: "ALL SUCCESSFUL", dayId: req.params.dayId});
 })
 
+let count = 0
+
 daysRouter.post('/', (req, res, next) => {
     const id = req.body.id;
     const eventName = req.body.eventName;
@@ -109,17 +111,16 @@ daysRouter.post('/', (req, res, next) => {
        $monthNum: monthNum,
     //    $username: username
    }
-
+   
    db.run(sql, values, function(error) {
        if(error) {
         //    next(error);
         // res.redirect('/:weekId');
         console.log('from days error: ' + error.message);
        } else {
-           db.get(`SELECT * FROM Records WHERE Weeks.id = ${this.lastID}`,
-           (error, record) => {
-                res.status(201).json({record: "ALL SUCCESSFUL"});
-           } )
+            console.log('posting successful: ' + count );
+            count++;
+            res.status(201).json({record: "ALL SUCCESSFUL"}).end()
        }
    })
 

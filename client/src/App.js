@@ -1,12 +1,9 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 import * as myRequestAndStore from './requestAndStore.js'
 import axios from 'axios';
-import RequestMyServer from './requestMyServer.js';
 import * as myDate from './date.js';
-import { FirstNavigation } from './pages/router.js';
-
+import Loader from '../src/pages/toDo/Loader.js';
 
   let gapi = window.gapi
 /**
@@ -14,15 +11,14 @@ import { FirstNavigation } from './pages/router.js';
    */
   window.onload = handleClientLoad;
   function handleClientLoad() {
-      gapi.load('client:auth2', initClient1);    
+    gapi.load('client:auth2', initClient);
   }
 
- 
   /**
    *  Initializes the API client library and sets up sign-in state
    *  listeners.
    */
-    function initClient1() {
+    function initClient() {
     gapi.client.init({
         // Client ID and API key from the Developer Console
       apiKey: 'AIzaSyBYxwNwT53EbvQNvhVCDD3FZW3KvTQWRBs',
@@ -32,13 +28,13 @@ import { FirstNavigation } from './pages/router.js';
       // Authorization scopes required by the API; multiple scopes can be
       // included, separated by spaces.
       scope: 'https://www.googleapis.com/auth/calendar.readonly'
-    }).then(async function () {
+    }).then(function () {
+     
       // Listen for sign-in state changes.
       gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
 
       // Handle the initial sign-in state.
       updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-      
     
     }, function(error) {
       alert(JSON.stringify(error, null, 2));
@@ -49,43 +45,15 @@ import { FirstNavigation } from './pages/router.js';
    *  Called when the signed in status changes, to update the UI
    *  appropriately. After a sign-in, the API is called.
    */
-   async function updateSigninStatus(signedIn) {
-    //  alert(signedIn)
+    async function updateSigninStatus(signedIn) {
     if (signedIn) {
-      let date = myDate.edgeDaysOfEachMonth()
+      console.log('signedIn so change view to show navigation')
 
-      try {
-      // alert('before requesting at')
-      
-          await myRequestAndStore.ListOfCalendars(date.startOfOneMonthAgo, date.endOfCurrentMonth)
-          await myRequestAndStore.ListOfCalendars(date.startOfTwoMonthsAgo, date.startOfOneMonthAgo)
-          await myRequestAndStore.ListOfCalendars(date.startOfThreeMonthsAgo, date.startOfTwoMonthsAgo)
-          await myRequestAndStore.ListOfCalendars(date.startOfSixMonthsAgo, date.startOfThreeMonthsAgo)
-          await myRequestAndStore.ListOfCalendars(date.startOfNineMonthsAgo, date.startOfSixMonthsAgo)
-          await myRequestAndStore.ListOfCalendars(date.startOfTwelveMonthsAgo, date.startOfNineMonthsAgo)
-        
-          
-          // let daily = document.getElementById('daily')
-          // // alert('clicking daily')
-          // daily.click()
-          
-          
-        // alert('finish requests')
-        // window.localStorage.setItem('firstTime', true)
-
-        // alert('about to call change to daily')
-        
-
-        // alert('about to change to daily page')
-        // window.location.href = `./daily/calName/all/${(new Date()).toDateString()}`
-       
-    
-      } catch (error) {
-          alert('error in App.js is: ' + JSON.stringify(error))
-      }
 
     } else {
-      
+      console.log("signing you out \n change view to home page")
+      // let authorize = document.getElementById('authorize')
+      // authorize.click()
     }
   }
 
@@ -94,41 +62,36 @@ import { FirstNavigation } from './pages/router.js';
    * functi
    *  Sign in the user upon button click.
    */
-    function handleAuthClick(event) {
+    async function handleAuthClick(event) {
       try {
         if(gapi.auth2.getAuthInstance().isSignedIn.get()) {
-          alert ('already signed in ')
-          updateSigninStatus(true)
+          console.log('already signed in ')
+          window.location.replace(`./daily/calName/all/${(new Date()).toDateString()}`)
         } else {
-          gapi.auth2.getAuthInstance().signIn();
+          await gapi.auth2.getAuthInstance().signIn();
+          console.log('first time so making a request')
+          let date = myDate.edgeDaysOfEachMonth()
+          // myRequestAndStore.listOfCalendars(date.startOfTwelveMonthsAgo, date.endOfCurrentMonth)
+          let d = document.createElement('div')
+          d.className = 'loader'
+          document.getElementById('home-page').replaceWith(d)
+
+          await myRequestAndStore.listOfCalendars(date.startOfOneMonthAgo, date.endOfCurrentMonth)
+          
+          window.location.replace(`./daily/calName/all/${(new Date()).toDateString()}`)
         }
       } catch (error) {
         alert(error.message)
       }
-      // try {
-      //   gapi.load('client:auth2', initClient1('signIn')); 
-      //     // gapi.auth2.getAuthInstance().signIn();
-      // } catch (error) {
-      //   alert('in handleAuthClick: '+ error.message)
-
-      // }
   }
 
   /**
    *  Sign out the user upon button click.
    */
-  export function handleSignoutClick(event) {
-    try {
-      sendDelete();
+  export async function handleSignoutClick(event) {
+    await sendDelete();
     gapi.auth2.getAuthInstance().signOut();
-    // alert('signedOut: ' + gapi.auth2.getAuthInstance().isSignedIn.get())
-    window.location.assign(`/`)
-    } catch (error) {
-      alert('error in handleSignoutClick: ' + error.message)
-    }
-    
-    // gapi.load('client:auth2'); 
-    
+    window.location.replace('/')
   }
 
   async function sendDelete(){
@@ -145,7 +108,7 @@ import { FirstNavigation } from './pages/router.js';
 
   let App = () =>{
     return (
-      <div className="App">
+      <div id = 'app' className="App">
         <header className="App-header">
         < Homepage onClick={handleAuthClick} />
         </header>
@@ -160,8 +123,8 @@ let LeftSection = (props) => {
                 <div class="block">
                   <h1 class="title" style={{color: "lightblue"}}>Analyze Your Calendar</h1>
                   <h6 class="subtitle" style={{color: "gray"}}>Made with Google Calendar API</h6>
-                  <hr style={{width: '100%'}}/>
                 </div>
+                < hr style={{width:"100%"}} />
                 <div class="block">
                   <p class = 'homePageParagraph'> Analyze and learn how you spent your past days, weeks, or months from your google calendar.</p> 
                 <div class="block">
@@ -195,30 +158,20 @@ let RightSection = () => {
                     </p>
                     <br/>
                   <ul>
-                    <li>username: demofor426</li>
-                    <li>password: Comp4262020</li>
+                    <li>username: comingSoon</li>
+                    <li>password: comingSoon</li>
                   </ul>
                   <br/>
                   <p>Feel free to log in to <a href="https://accounts.google.com/signin/v2/identifier?service=cl&passive=1209600&osid=1&continue=https%3A%2F%2Fcalendar.google.com%2Fcalendar%2Fr&followup=https%3A%2F%2Fcalendar.google.com%2Fcalendar%2Fr&flowName=GlifWebSignIn&flowEntry=ServiceLogin"> Google Calendar</a> and update events as well</p>
                   
               </div>
-                       
-              <a
-                className="App-link"
-                href="https://reactjs.org"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                 Front End Made with React
-              </a>
-              < RequestMyServer />
             </div>
   )
 }
   
 let Homepage = (props) => {
   return(
-    <div class="hero-body">
+    <div class="hero-body" id='home-page'>
         <div class="container">
           <div class="columns">
               <LeftSection onClick = {props.onClick} />

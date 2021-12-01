@@ -4,26 +4,41 @@ import 'bulma/css/bulma.min.css';
 import isSignedIn from "../App.js";
 import * as myDate from '../date.js'
 
+function Nav(props) {
+     return(
+        <>
+          <nav class="navbar is-light" role="navigation" aria-label="main navigation">
+            <NavBarSymbols />
+            <div id="navbarBasicExample" class="navbar-menu"> 
+                <LeftNavBarChocies />
+                <RightNavBarChocies onSignout = {props.onSignout} />
+            </div>  
+        </nav>
+            <Outlet />
+        </>
+    )
+}
+
 function NavBarSymbols () {
     return(
         <div class="navbar-brand">
-                <Link to="/home" class="navbar-item" > 
-                {/* <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28"></img> */}
-                    
-                    <span class="icon-text">
-                        <span class="icon">
-                        <i class="fas fa-history"></i>
-                        </span>
-                        <span class="m-0 p-0 has-text-link" id = 'logo'>GCAnalyzer</span>
-                    </span>
-                </Link>
+        <Link to="/home" class="navbar-item" > 
+        {/* <img src="https://bulma.io/images/bulma-logo.png" width="112" height="28"></img> */}
+            
+            <span class="icon-text">
+                <span class="icon">
+                <i class="fas fa-history"></i>
+                </span>
+                <span class="m-0 p-0 has-text-link" id = 'logo'>GCAnalyzer</span>
+            </span>
+        </Link>
 
-                <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-                <span aria-hidden="true"></span>
-                </a>
-            </div>
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        </a>
+    </div>
     )
 }
 
@@ -44,52 +59,33 @@ function LeftNavBarChocies() {
 function RightNavBarChocies (props) {
     return (
         <div class="navbar-end" id="right-navbar-choices" >
-                    <div class="navbar-item has-dropdown is-hoverable">
-                        <Link to="/more" class="navbar-item"> More </Link>
-                        <div class="navbar-dropdown">
-                            <a class="navbar-item">
-                                About
-                            </a>
-                            <Link to="/app" class="navbar-item"> App </Link> 
-                            <Link to="/contact" class="navbar-item"> Contatct Me </Link>
-                            <hr class="navbar-divider"/> 
-                            <a class="navbar-item">
-                                Report an issue
-                            </a>
-                        </div>
-                    </div>
+        <div class="navbar-item has-dropdown is-hoverable">
+            <span  class="navbar-item"> More </span>
+            <div class="navbar-dropdown">
+                <a disabled class="navbar-item">
+                    About
+                </a>
+                <Link to="/contact" class="navbar-item"> Contatct Me </Link>
+                <Link id={'refresh'} to="#" class="navbar-item"> Refresh Data </Link> 
+                <hr class="navbar-divider"/> 
+                <a class="navbar-item is-disabled">
+                    Report an issue
+                </a>
+            </div>
+        </div>
 
-                    <div class="navbar-item">
-                        <div  class="buttons"  >
-                            <button onClick = {props.onSignout} id='signout-button' class="button is-primary">
-                                Sign Out
-                            </button>
-                        </div>
-                    </div>
-                </div>
+        <div class="navbar-item">
+            <div  class="buttons"  >
+                <button onClick = {props.onSignout} id='signout-button' class="button is-primary">
+                    Sign Out
+                </button>
+            </div>
+        </div>
+    </div>
     )
 }
 
-function Nav(props) {
-    // if(isSignedIn) {
-    //     alert('nav says signed In')
-    // } else {
-    //     alert('nav says not signed in')
-    // }
-    return(
-        <>
-            <nav class="navbar is-light" role="navigation" aria-label="main navigation">
-                <NavBarSymbols />
-                <div  class="navbar-menu"> 
-                    < LeftNavBarChocies />
-                    < RightNavBarChocies onSignout = {props.onSignout} />
-                </div>  
-            </nav>
 
-            <Outlet />
-        </>
-    )
-}
 
 //navebar burger and navebar menu toggle is-active when pressed
 document.addEventListener('DOMContentLoaded', () => {

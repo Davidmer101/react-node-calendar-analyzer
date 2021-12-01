@@ -1,27 +1,75 @@
-import {useState} from 'react'
 import {NavLink, Outlet, useParams, useNavigate} from 'react-router-dom'
 import useFetch from '../useFetch'
-import Daily from './Daily.js'
-import {TableView, Productivity} from './Views.js';
+import {TableView, Productivity} from './views/TypeView.js';
 import * as myDate from '../date.js'
-import { Calendar } from "react-modern-calendar-datepicker";
-import{ DailyCalendarView} from './Daily.js'
-import {WeeklyCalendarView} from './Weekly.js'
-import {MonthlyCalendarView} from './Monthly.js'
-import Loader from './Loader.js'
+import{ DailyCalendarView} from './views/CalendarView.js'
+import {WeeklyCalendarView} from './views/CalendarView.js'
+import { WeekDaysView } from './views/CalendarView.js';
+import {MonthlyCalendarView} from './views/CalendarView.js'
+import Loader from './toDo/Loader.js'
+import {listOfCalendars} from '../requestAndStore.js'
+import {starterURL} from '../requestAndStore.js'
+let gapi = window.gapi; 
 
-export function FirstNavigation () {
- 
+
+let firstTime = true
+export async function FillDb () {
+  console.log(firstTime)
+  let date = myDate.edgeDaysOfEachMonth()
+  let url = `api/daily/calName/all/${(date.startOfSixMonthsAgo).toDateString()}/none`
+  fetch((starterURL+ '' + url))
+        .then((res) => res.json())
+        .then((data) => {
+          if(data.records.length == 0) {
+              gapi.load('client:auth2', initClient);
+              function initClient() {
+                gapi.client.init({
+                    // Client ID and API key from the Developer Console
+                  apiKey: 'AIzaSyBYxwNwT53EbvQNvhVCDD3FZW3KvTQWRBs',
+                  clientId: '958765352456-n0b4hg33876562lgerugi6qfei2jjaja.apps.googleusercontent.com',
+                  // Array of API discovery doc URLs for APIs used by the quickstart
+                  discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'],
+                  // Authorization scopes required by the API; multiple scopes can be
+                  // included, separated by spaces.
+                  scope: 'https://www.googleapis.com/auth/calendar.readonly'
+                }).then(async function () {
+
+                  await listOfCalendars(date.startOfSixMonthsAgo, date.startOfOneMonthAgo)
+                  await listOfCalendars (date.startOfTwelveMonthsAgo, date.startOfSixMonthsAgo)
+                
+                }, function(error) {
+                  console.log(JSON.stringify(error, null, 2));
+                });
+              }
+              
+          } 
+        })
+          
   
+  // if(data) {
+  //   data.records.length ? 
+  //     alert(' data in FillDb: ' + JSON.stringify(data)) : 
+  //     
+  // }
+  
+ 
 }
 
 export default function Router () {
+
+  if(firstTime) { 
+    console.log('calling FillDb')
+    FillDb()
+    firstTime = false
+  }
+  
   // let first = window.localStorage.getItem('firstTime');
   // if(first) {
   //   alert('first time')
   //   window.localStorage.removeItem('firstTime');
   // }
     // alert('in router')
+    
     let weekRange = {weekStartsOn: new Date('Sun Oct 31 2021'), weekEndsOn: new Date('Sat Nov 5 2021')}
     let dateInMonth = new Date()
     let params = useParams()
@@ -39,7 +87,7 @@ export default function Router () {
     let dataLinkAdded 
     if(data) {
         data = data.records
-        if(data) {
+        if(data.length) {
           dataLinkAdded = data.map(addLink)
           if(period == 'weekly') {
             weekRange = myDate.oneWeek(data[0].id)
@@ -47,6 +95,9 @@ export default function Router () {
            dateInMonth = new Date(data[0].id)
          }
  
+        } else {
+          alert('For now: \n You can only see from the start of this year (Jan 1 2021) \n \t\t upto \n The end of the current month (Nov 30 2021) \n Period will be extend soon')
+          window.location.replace(`/daily/calName/all/${(new Date()).toDateString()}`)
         }
         
     }
@@ -115,13 +166,16 @@ export default function Router () {
         <>
           <div class = 'columns' style={{'margin-top': 'auto', 'border-top': '1px solid gray'}}> 
             
-            {period == 'daily' && <DailyCalendarView onClick = {e => adjustPeriod(e)} dateRange = {new Date(date)} /> }
+            {period == 'daily' && <DailyCalendarView onClick = {e => adjustPeriod(e)} dateRange = {new Date(date)}  /> }
             {period == 'weekly' && <WeeklyCalendarView onClick = {e => adjustPeriod(e)} dateRange = {weekRange} />}
             {period == 'monthly' && <MonthlyCalendarView onClick = {e => adjustPeriod(e)} dateRange = {dateInMonth} />}
             {dataLinkAdded && <TableView dataC={dataLinkAdded} type={type} onClick = {e => adjustPeriod(e)} dateRange = {new Date(date)}/>}
               <Outlet />
             <Productivity data = {data} show={detail ? 'text': 'table' } />
-          </div>       
+          </div> 
+
+          {period == 'weekly' && <WeekDaysView dateRange = {weekRange} />}
+
         </>
         )
 }

@@ -87,48 +87,80 @@ button > * {
 
 /* //Loader */
 .loader {
-  border: 16px solid #f3f3f3; /* Light grey */
-  border-top: 16px solid #3498db; /* Blue */
+  border: 16px solid #161414;
   border-radius: 50%;
+  border-top: 16px solid #158edf;
   width: 120px;
   height: 120px;
+  /* -webkit-animation: spin 2s linear infinite; Safari */
   animation: spin 2s linear infinite;
+  margin: 25% auto;
+  /* background-color: #282c34; */
+}
+
+/* Safari
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+} */
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 /* Coming Soon Page */
-.bgimg {
-  /* background-image: url('https://wallpaperaccess.com/full/112097.jpg'); */
-  height: 500px;
-  background-position: center;
-  background-size: cover;
-  position: relative;
-  color: white;
-  font-family: "Courier New", Courier, monospace;
-  font-size: 25px;
+/* Set height to 100% for body and html to enable the background image to cover the whole page: */
+body, html {
+  height: 100%
 }
 
+
+.bgimg {
+  /* Background image */
+  /* background-image: url('https://bashooka.com/wp-content/uploads/2015/07/coming-soon-template-7.jpg'); */
+  /* Full-screen */
+  height: 900px;
+  /* Center the background image */
+  background-position: center;
+  /* Scale and zoom in the image */
+  background-size: cover;
+  /* Add position: relative to enable absolutely positioned elements inside the image (place text) */
+  position: relative;
+  /* Add a white text color to all elements inside the .bgimg container */
+  color: white;
+  /* Add a font */
+  font-family: "Courier New", Courier, monospace;
+  /* Set the font-size to 25 pixels */
+  font-size: 25px;
+  background-color: #282c34;
+}
+
+/* Position text in the top-left corner */
 .topleft {
   position: absolute;
   top: 0;
   left: 16px;
 }
 
+/* Position text in the bottom-left corner */
 .bottomleft {
   position: absolute;
   bottom: 0;
   left: 16px;
 }
 
+/* Position text in the middle */
 .middle {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   text-align: center;
-  color: red
 }
 
-hr {
+/* Style the <hr> element */
+hr.bgimg {
   margin: auto;
   width: 40%;
 }

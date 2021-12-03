@@ -9,17 +9,16 @@ Use the package manager [npm]
 ```bash
   git clone https://github.com/Davidmer101/react-node-calendar-analyzer.git
 ```
-2. Install packages
+2. Install packages and start server
 ```bash
  npm install
+  npm start
 ```
-3. Start Server
-```bash
- npm start
-```
-3. Start Client on different terminal
+
+3. SOn different terminal, change to client directory, install packages, and start client
 ```bash
  cd .\client\
+ npm install
  npm start
 ```
 

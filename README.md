@@ -30,7 +30,7 @@ Use the package manager [npm]
 * press the Calendar names to view events breakdown
 * productivity table is always on the right recalculated as you change periods
 * Custom time period and event analysis will be available soon
-![image](https://user-images.githubusercontent.com/22249039/140974407-7cf5d5e7-570a-407e-b96d-06960ced282e.png)
+![Screenshot 2021-12-03 045419](https://user-images.githubusercontent.com/22249039/144609519-04c38a9a-efdb-4187-80cf-21bd2d55fd46.png)
 
 
 ## Contributing

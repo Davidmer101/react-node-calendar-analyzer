@@ -12,10 +12,10 @@ Use the package manager [npm]
 2. Install packages and start server
 ```bash
  npm install
-  npm start
+ npm start
 ```
 
-3. SOn different terminal, change to client directory, install packages, and start client
+3. On different terminal, change to client directory, install packages, and start client
 ```bash
  cd .\client\
  npm install

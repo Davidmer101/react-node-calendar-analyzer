@@ -1,7 +1,7 @@
 import axios from 'axios';
 import * as myDate from './date.js';
 
-export let starterURL = 'http://localhost:5000/' 
+export let starterURL = 'https://react-g-calendar-analyzer.herokuapp.com/'; 
 let calendarList = [];
 let eventList = [];
 let gapi = window.gapi; 

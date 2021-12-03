@@ -1,6 +1,6 @@
 import {useState, useEffect} from "react";
 
-let proxy = "http://localhost:5000";
+let proxy = "https://react-g-calendar-analyzer.herokuapp.com";
 
 function useFetch (url) {
     // alert('url in useFetch is: ' + proxy + '' + url)

@@ -20,8 +20,8 @@ function Index () {
         <Route path="/" element={<Nav onSignout = {myApp.handleSignoutClick}/>} >
           <Route path="/home" element={<Home />} />
           <Route path="/contact" element={<Contact/>} />
-          <Route path="/:period/:type/:specific/:date" element={<Router/>} >    {/*{<Daily day={new Date()} */}
-            <Route path="/:period/:type/:specific/:date/:detail" element={<CalName/>} />
+          <Route path="/:period/:type/:specific/:date/:year" element={<Router/>} >    {/*{<Daily day={new Date()} */}
+            <Route path="/:period/:type/:specific/:date/:year/:detail" element={<CalName/>} />
           </Route>
           <Route path="/custom" element={<Custom/>} />
         </Route>

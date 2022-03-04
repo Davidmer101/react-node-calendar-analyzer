@@ -243,7 +243,7 @@ export let DailyCalendarView = (props) => {
   }
 
   const Day =  (requested) => {
-    let data =  useFetch(`/api/daily/calName/all/${requested.date}/none`)
+    let data =  useFetch(`/api/daily/calName/all/${requested.date}/none/${( new Date(requested.date)).getFullYear()}`)
     let calNames = ['Education', 'Entertainment', 'Life', 'MED', 'Work']
     let editedData = {records: []}
     // data = {"records":[{"calName":"Education","TotalHours":1.25},{"calName":"Entertainment","TotalHours":1},{"calName":"Life","TotalHours":20.99972222222222}]}

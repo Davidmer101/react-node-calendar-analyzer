@@ -48,17 +48,18 @@ weeksRouter.get('/', (req, res, next) => {
     //     });
 }) 
 
-weeksRouter.get('/:type/:specific/:date/:detail', (req, res, next) => {
+weeksRouter.get('/:type/:specific/:date/:detail/:year', (req, res, next) => {
     let sql
     let type = req.params.type
     let weekNum = req.params.date
     if(req.params.detail == 'none') {
         sql =`SELECT ${type} , sum(duration) as totalHours, id 
         FROM (SELECT DISTINCT * FROM Records)
-        WHERE weekNum = ${weekNum} 
+        WHERE weekNum = ${weekNum} and yearNum = ${req.params.year}
         GROUP BY ${type}
         ORDER BY totalHours DESC `
     } else {
+        console.log('runing this')
         sql =`SELECT ${type} , sum(duration) as totalHours, id 
         FROM (SELECT DISTINCT * FROM Records)
         WHERE weekNum = ${weekNum} and calName = "${req.params.detail}"
@@ -154,8 +155,9 @@ weeksRouter.put('/:weekId', (req, res, next) => {
     })
 })
 
-weeksRouter.delete('/', (req, res, next) => {
-    const sql = `DELETE FROM Weeks`;
+weeksRouter.delete('/:weekNum', (req, res, next) => {
+    console.log('deleting weekly');
+    const sql = `DELETE FROM Records WHERE weekNum = ${req.params.weekNum}`;
     db.run(sql, (error) => {
         if(error) {
             next(error);

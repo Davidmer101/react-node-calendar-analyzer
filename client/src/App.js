@@ -66,7 +66,7 @@ import Loader from '../src/pages/toDo/Loader.js';
       try {
         if(gapi.auth2.getAuthInstance().isSignedIn.get()) {
           console.log('already signed in ')
-          window.location.replace(`./daily/calName/all/${(new Date()).toDateString()}`)
+          window.location.replace(`./daily/calName/all/${(new Date()).toDateString()}/${(new Date()).getFullYear()}`)
         } else {
           await gapi.auth2.getAuthInstance().signIn();
           console.log('first time so making a request')
@@ -78,7 +78,7 @@ import Loader from '../src/pages/toDo/Loader.js';
 
           await myRequestAndStore.listOfCalendars(date.startOfTwoMonthsAgo, date.endOfCurrentMonth)
           
-          window.location.replace(`./daily/calName/all/${(new Date()).toDateString()}`)
+          window.location.replace(`./daily/calName/all/${(new Date()).toDateString()}/${(new Date()).getFullYear()}`)
         }
       } catch (error) {
         alert(error.message)
@@ -94,7 +94,8 @@ import Loader from '../src/pages/toDo/Loader.js';
     window.location.replace('/')
   }
 
-  async function sendDelete(){
+  export async function sendDelete(){
+    alert('DELETING GOING ON')
     try {
      let result = await axios ({
        method: 'delete',

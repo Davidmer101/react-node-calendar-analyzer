@@ -24,7 +24,7 @@ app.use(function(req, res, next) {
     next();
   });
   
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5500;
 
 app.use(bodyParser.json());
 app.use(cors());

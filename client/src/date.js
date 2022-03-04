@@ -184,3 +184,6 @@ function adjustMonthDate(shiftMonth, day) {
 }
 
 export {updateDate, timeZone, timeBetween, weekNumber, oneWeek, edgeDaysOfEachMonth}
+let dateTest = edgeDaysOfEachMonth()
+console.log()
+console.log(dateTest.startOfOneMonthAgo.toLocaleDateString(), dateTest.endOfCurrentMonth.toLocaleDateString())

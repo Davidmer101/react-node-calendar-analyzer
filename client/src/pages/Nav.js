@@ -1,8 +1,10 @@
 import React from 'react';
 import { Outlet, Link } from 'react-router-dom';
 import 'bulma/css/bulma.min.css';
-import isSignedIn from "../App.js";
+import isSignedIn, {sendDelete} from "../App.js";
 import * as myDate from '../date.js'
+import { RefereshData } from './Router.js';
+
 
 function Nav(props) {
      return(
@@ -46,12 +48,14 @@ function LeftNavBarChocies() {
     let today = new Date()
     let currentWeekNum = myDate.weekNumber(today)
     let currentMonthNum = (new Date()).getMonth()
+    let currentYearNum = today.getFullYear()
     return (
         <div id="left-navbar-choices" class="navbar-start">
-            <Link id={'daily'} to={`/daily/calName/all/${today.toDateString()}`} key={'period'} class="navbar-item" > Daily </Link>
-            <Link to={`/weekly/calName/all/${currentWeekNum}`} class="navbar-item"> Weekly </Link>
-            <Link id={`monthly`} to={`/monthly/calName/all/${currentMonthNum}`} class="navbar-item"> Monthly </Link> 
+            <Link id={'daily'} to={`/daily/calName/all/${today.toDateString()}/${currentYearNum}`} key={'period'} class="navbar-item" > Daily </Link>
+            <Link to={`/weekly/calName/all/${currentWeekNum}/${currentYearNum}`} class="navbar-item"> Weekly </Link>
+            <Link id={`monthly`} to={`/monthly/calName/all/${currentMonthNum}/${currentYearNum}`} class="navbar-item"> Monthly </Link> 
             <Link id= {`custom`} to="/custom" class="navbar-item"> Custom </Link> 
+            
         </div>
     )
 }
@@ -61,16 +65,26 @@ function RightNavBarChocies (props) {
         <div class="navbar-end" id="right-navbar-choices" >
         <div class="navbar-item has-dropdown is-hoverable">
             <span  class="navbar-item"> More </span>
+            
             <div class="navbar-dropdown">
+
                 <a disabled class="navbar-item">
                     About
                 </a>
+                
                 <Link to="/contact" class="navbar-item"> Contatct Me </Link>
                 <Link id={'refresh'} to="#" class="navbar-item"> Refresh Data </Link> 
                 <hr class="navbar-divider"/> 
                 <a class="navbar-item is-disabled">
                     Report an issue
                 </a>
+                <button class="button is-danger" onClick = {sendDelete} > Erase All Data</button>
+            </div>
+        </div>
+        <div class="navbar-item">
+            <div  class="buttons"  >
+            <button onClick = {RefereshData}> Refersh Data </button>
+
             </div>
         </div>
 

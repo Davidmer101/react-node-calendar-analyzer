@@ -1,7 +1,7 @@
 import axios from 'axios';
 import * as myDate from './date.js';
 
-export let starterURL = 'http://localhost:5000/' 
+export let starterURL = 'http://localhost:5500/' 
 let calendarList = [];
 let eventList = [];
 let gapi = window.gapi; 
@@ -100,13 +100,13 @@ let gapi = window.gapi;
       let monthNum2 = eventEndsAt.getMonth()
       let eventDuration1 = roundTo2Decimals(myDate.timeBetween(eventStartsAt, dayEndsAt).hours)
       let eventDuration2 = roundTo2Decimals(myDate.timeBetween(nextDayStartsAt, eventEndsAt).hours)
-      await sendPost(eventStartsAt.toDateString(), event.summary, eventStartsAt, dayEndsAt, calName, event.description, eventDuration1, weekNum1, monthNum1)
-      await sendPost(eventEndsAt.toDateString(), event.summary, nextDayStartsAt, eventEndsAt, calName, event.description, eventDuration2, weekNum2, monthNum2)
+      await sendPost(eventStartsAt.toDateString(), event.summary, eventStartsAt, dayEndsAt, calName, event.description, eventDuration1, weekNum1, monthNum1, eventStartsAt.getFullYear())
+      await sendPost(eventEndsAt.toDateString(), event.summary, nextDayStartsAt, eventEndsAt, calName, event.description, eventDuration2, weekNum2, monthNum2, eventEndsAt.getFullYear())
       
     } else {
       let weekNum = myDate.weekNumber(eventStartsAt)
       let monthNum = eventStartsAt.getMonth()
-      await sendPost(eventStartsAt.toDateString(), event.summary, eventStartsAt, eventEndsAt, calName, event.description, eventDuration, weekNum, monthNum)
+      await sendPost(eventStartsAt.toDateString(), event.summary, eventStartsAt, eventEndsAt, calName, event.description, eventDuration, weekNum, monthNum, eventStartsAt.getFullYear())
     }
     
    }
@@ -114,7 +114,7 @@ let gapi = window.gapi;
     return 
 }
 
- export async function sendPost(id, eventName, startTime, endTime, calName, description, duration, weekNum, monthNum ){
+ export async function sendPost(id, eventName, startTime, endTime, calName, description, duration, weekNum, monthNum, yearNum){
   try {
    let result = await axios ({
      method: 'post',
@@ -128,7 +128,8 @@ let gapi = window.gapi;
         "description": description,
         "duration": duration,
         "weekNum": weekNum,
-        "monthNum": monthNum
+        "monthNum": monthNum,
+        "yearNum": yearNum
      }
      
  })

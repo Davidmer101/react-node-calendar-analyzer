@@ -47,7 +47,7 @@ daysRouter.get('/', (req, res, next) => {
     //     });
 }) 
 
-daysRouter.get('/:type/:specific/:date/:detail', (req, res, next) => {
+daysRouter.get('/:type/:specific/:date/:detail/:year', (req, res, next) => {
     let sql
     let type = req.params.type  //calName or eventName maybe description
     let day = req.params.date
@@ -93,12 +93,13 @@ daysRouter.post('/', (req, res, next) => {
     const duration = req.body.duration;
     const weekNum = req.body.weekNum;
     const monthNum = req.body.monthNum;
+    const yearNum = req.body.yearNum;
     // const username = req.session.user;
     // if(!id || !username) {
     //     return res.status(200).json({username: username});
     // } //I will accpet zeroes ofr cal1-5 so no checking for undefined or 0
-   const sql = 'INSERT INTO Records (id, eventName, startTime, endTime, calName, description, duration, weekNum, monthNum) ' + 
-                ` VALUES ($id,$eventName, $startTime, $endTime, $calName, $description, $duration, $weekNum, $monthNum)`;
+   const sql = 'INSERT INTO Records (id, eventName, startTime, endTime, calName, description, duration, weekNum, monthNum, yearNum) ' + 
+                ` VALUES ($id,$eventName, $startTime, $endTime, $calName, $description, $duration, $weekNum, $monthNum, $yearNum)`;
    const values = {
        $id: id,
        $eventName: eventName,
@@ -109,6 +110,7 @@ daysRouter.post('/', (req, res, next) => {
        $duration: duration,
        $weekNum: weekNum,
        $monthNum: monthNum,
+       $yearNum: yearNum
     //    $username: username
    }
    

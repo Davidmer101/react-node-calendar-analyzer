@@ -4,9 +4,9 @@ import {TableView} from './TypeView.js';
 export default  function CalName(props) {
     let params = useParams();
     let url = `/api`
-    let {period, type, specific, date, detail} = params
+    let {period, type, specific, date, year, detail} = params
     if (type == 'calName') {
-        url=`/api/${period}/eventName/${specific}/${date}/${detail}`
+        url=`/api/${period}/eventName/${specific}/${date}/${detail}/${year}`
     } else if (type == 'eventName') {
         alert("coming soon")
     }
